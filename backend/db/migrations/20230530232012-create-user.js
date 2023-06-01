@@ -14,6 +14,18 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      firstName: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        isAlpha: true,
+        notEmpty: true,
+      },
+      lastName: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        isAlpha: true,
+        notEmpty: true,
+      },
       username: {
         type: Sequelize.STRING(30),
         allowNull: false,
@@ -37,18 +49,6 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-      },
-      firstName: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        isAlpha: true,
-        notEmpty: true,
-      },
-      lastName: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        isAlpha: true,
-        notEmpty: true,
       }
     }, options);
   },
