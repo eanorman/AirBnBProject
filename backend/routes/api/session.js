@@ -48,7 +48,7 @@ router.post(
       const safeUser = {
         id: user.id,
         firstName: user.firstName,
-        lastName: user.lastName,
+        lastName: user.firstName,
         email: user.email,
         username: user.username,
       };
@@ -61,7 +61,9 @@ router.post(
     }
   );
 
-  router.delete(
+
+// Log out
+router.delete(
     '/',
     (_req, res) => {
       res.clearCookie('token');
@@ -69,7 +71,7 @@ router.post(
     }
   );
 
-  // Restore session user
+// Restore session user
 router.get(
     '/',
     (req, res) => {
@@ -88,5 +90,6 @@ router.get(
       } else return res.json({ user: null });
     }
   );
+
 
 module.exports = router;

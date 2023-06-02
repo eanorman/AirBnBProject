@@ -15,16 +15,20 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       firstName: {
-        type: Sequelize.STRING,
         allowNull: false,
-        isAlpha: true,
-        notEmpty: true,
+        type: Sequelize.STRING,
+        validate: {
+          isAlpha: true,
+          notEmpty: true
+        }
       },
       lastName: {
-        type: Sequelize.STRING,
         allowNull: false,
-        isAlpha: true,
-        notEmpty: true,
+        type: Sequelize.STRING,
+        validate: {
+          isAlpha: true,
+          notEmpty: true
+        }
       },
       username: {
         type: Sequelize.STRING(30),
