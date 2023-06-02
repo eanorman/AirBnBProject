@@ -2,7 +2,7 @@ const express = require('express');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
-const { setTokenCookie, restoreUser } = require('../../utils/auth');
+const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth');
 const { User } = require('../../db/models');
 
 const { check } = require('express-validator');
@@ -48,7 +48,7 @@ router.post(
       const safeUser = {
         id: user.id,
         firstName: user.firstName,
-        lastName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         username: user.username,
       };
@@ -74,6 +74,7 @@ router.delete(
 // Restore session user
 router.get(
     '/',
+    requireAuth,
     (req, res) => {
       const { user } = req;
       if (user) {
