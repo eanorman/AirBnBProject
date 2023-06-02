@@ -29,6 +29,7 @@ const validateSignup = [
     handleValidationErrors
   ];
 
+  //get the logged in user
   router.get(
     '/:userId', restoreUser,
     async (req, res) => {
@@ -41,6 +42,31 @@ const validateSignup = [
           user: null
         })
       }
+    }
+  );
+
+  //signup a user
+  router.post(
+    '/signup',
+    validateSignup,
+    async (req, res) => {
+      const { firstName, lastName, email, password, username } = req.body;
+      const hashedPassword = bcrypt.hashSync(password);
+      const user = await User.create({ firstName, lastName, email, username, hashedPassword });
+
+      const safeUser = {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        username: user.username,
+      };
+
+      await setTokenCookie(res, safeUser);
+
+      return res.json({
+        user: safeUser
+      });
     }
   );
 
