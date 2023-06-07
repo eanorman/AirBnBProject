@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     endDate: {
       type: DataTypes.DATE,
-      allowNull: falses
+      allowNull: false
     }
   }, {
     sequelize,
