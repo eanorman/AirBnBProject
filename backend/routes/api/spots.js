@@ -96,24 +96,7 @@ router.get('/:spotId', async (req, res, next) => {
   let spot = await Spot.findOne({
     where:{
       id: spotId
-    },
-      // include: [
-      //   {
-      //     model: SpotImage,
-      //     where: {
-      //       spotId: spotId
-      //     },
-      //     attributes: ['id', 'url', 'preview']
-      //   },
-      //   {
-      //     model: User,
-      //     where: {
-      //       id: ownerId
-      //     },
-      //     attributes: ['id', 'firstName', 'lastName']
-      //   }
-
-      // ]
+    }
 
   })
   if(!spot){
