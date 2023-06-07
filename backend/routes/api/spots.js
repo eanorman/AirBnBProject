@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const  sequelize  = require('sequelize')
-const { spotsWithPreview,spotsWithAverage } = require('../../utils/spot')
+const { spotsWithPreview,spotsWithAverage, numberOfReviews, addAvgStarRating, getSpotImages, getSpotOwner } = require('../../utils/spot')
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { User, Spot, Review, SpotImage } = require('../../db/models');
@@ -89,6 +89,47 @@ router.get('/current', requireAuth, async (req, res, next) => {
   })
 })
 
+// Get a spot by spotId
+router.get('/:spotId', async (req, res, next) => {
+  let { spotId } = req.params;
+
+  let spot = await Spot.findOne({
+    where:{
+      id: spotId
+    },
+      // include: [
+      //   {
+      //     model: SpotImage,
+      //     where: {
+      //       spotId: spotId
+      //     },
+      //     attributes: ['id', 'url', 'preview']
+      //   },
+      //   {
+      //     model: User,
+      //     where: {
+      //       id: ownerId
+      //     },
+      //     attributes: ['id', 'firstName', 'lastName']
+      //   }
+
+      // ]
+
+  })
+  if(!spot){
+    res.statusCode = 404;
+    res.json({
+      message: "Spot couldn't be found"
+    })
+  }
+  await numberOfReviews(spot)
+  await addAvgStarRating(spot)
+  await getSpotImages(spot)
+  await getSpotOwner(spot)
+
+
+  res.json(spot)
+})
 
 // Create a spot
 router.post('/', validateSpot, requireAuth, async (req, res, next) => {
