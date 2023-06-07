@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { jwtConfig } = require('../config');
-const { User } = require('../db/models');
+const { User, Spot } = require('../db/models');
 
 const { secret, expiresIn } = jwtConfig;
 
@@ -70,4 +70,32 @@ const requireAuth = function (req, _res, next) {
     return next(err);
   }
 
-module.exports = { setTokenCookie, restoreUser, requireAuth };
+// Checks if current user is the owner of the spot
+const spotOwner = async function(req, res, next) {
+  const { user } = req;
+  const { spotId } = req.params;
+
+  let spot = await Spot.findByPk(spotId);
+
+
+  if(!spot){
+   res.statusCode = 404;
+   res.json({
+     message: "Spot couldn't be found"
+   })
+  } else {
+    if(spot.ownerId !== user.id){
+      const err = new Error('Authentication required');
+      err.title = 'Authentication required';
+      err.errors = { message: 'Authentication required' };
+      err.status = 401;
+      return next(err);
+    }
+
+    return next();
+
+  }
+
+}
+
+module.exports = { setTokenCookie, restoreUser, requireAuth, spotOwner };

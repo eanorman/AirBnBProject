@@ -5,7 +5,7 @@ const { handleValidationErrors } = require('../../utils/validation');
 const  sequelize  = require('sequelize')
 const { spotsWithPreview,spotsWithAverage, numberOfReviews, addAvgStarRating, getSpotImages, getSpotOwner } = require('../../utils/spot')
 
-const { setTokenCookie, requireAuth } = require('../../utils/auth');
+const { setTokenCookie, requireAuth, spotOwner } = require('../../utils/auth');
 const { User, Spot, Review, SpotImage } = require('../../db/models');
 
 const router = express.Router();
@@ -136,26 +136,10 @@ router.post('/', validateSpot, requireAuth, async (req, res, next) => {
 })
 
 // add an image to a spot based on the spot's id
-router.post('/:spotId/images', requireAuth, async (req, res, next) => {
-  const { user } = req;
+router.post('/:spotId/images', requireAuth, spotOwner, async (req, res, next) => {
+
   const { spotId } = req.params;
   const { url, preview } = req.body;
-
-  let spot = await Spot.findByPk(spotId);
-
-  if(!spot){
-    res.statusCode = 404;
-    res.json({
-      message: "Spot couldn't be found"
-    })
-  }
-
-  if(spot.ownerId !== user.id){
-    res.statusCode = 401;
-    res.json({
-      message: 'Unauthorized request'
-    })
-  }
 
   let spotImage = await SpotImage.create({
     spotId,
@@ -168,6 +152,29 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
     url: spotImage.url,
     preview: spotImage.preview
   })
+})
+
+// Edit a spot
+router.put('/:spotId', validateSpot, requireAuth, spotOwner, async (req, res, next) => {
+ let { address, city, state, country, lat, lng, name, description, price } = req.body
+  let { spotId } = req.params
+
+ let spot = await Spot.findByPk(spotId);
+
+
+ await spot.update({
+  address,
+  city,
+  state,
+  country,
+  lat,
+  lng,
+  name,
+  description,
+  price
+ })
+
+ res.json(spot)
 })
 
 module.exports = router;
