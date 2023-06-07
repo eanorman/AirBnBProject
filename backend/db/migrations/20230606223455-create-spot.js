@@ -15,7 +15,9 @@ module.exports = {
         references: {
           model: 'Users',
           key: 'id'
-        }
+        },
+        onDelete: 'cascade',
+        hooks: true
       },
       address: {
         type: Sequelize.STRING,

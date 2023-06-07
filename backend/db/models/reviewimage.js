@@ -11,7 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       ReviewImage.belongsTo(models.Review, {
-        foreignKey: 'reviewId'
+        foreignKey: 'reviewId',
+        onDelete: 'cascade',
+        hooks: true
       })
     }
   }
@@ -21,7 +23,9 @@ module.exports = (sequelize, DataTypes) => {
       references: {
         model: 'Reviews',
         key: 'id'
-      }
+      },
+      onDelete: 'cascade',
+      hooks: true
     },
     url: {
       type: DataTypes.STRING

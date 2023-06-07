@@ -11,19 +11,27 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Spot.hasMany(models.Booking, {
-        foreignKey: 'spotId'
+        foreignKey: 'spotId',
+        onDelete: 'cascade',
+        hooks: true
       })
 
       Spot.hasMany(models.Review, {
-        foreignKey: 'spotId'
+        foreignKey: 'spotId',
+        onDelete: 'cascade',
+        hooks: true
       })
 
       Spot.belongsTo(models.User, {
-        foreignKey: 'ownerId'
+        foreignKey: 'ownerId',
+        onDelete: 'cascade',
+        hooks: true
       })
 
       Spot.hasMany(models.SpotImage, {
-        foreignKey: 'spotId'
+        foreignKey: 'spotId',
+        onDelete: 'cascade',
+        hooks: true
       })
     }
   }
@@ -34,7 +42,8 @@ module.exports = (sequelize, DataTypes) => {
       references: {
         model: 'Users',
         key: 'id'
-      }
+      },
+      onDelete: 'cascade'
     },
     address: {
       type: DataTypes.STRING,

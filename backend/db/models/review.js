@@ -11,15 +11,21 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Review.hasMany(models.ReviewImage, {
-        foreignKey: 'reviewId'
+        foreignKey: 'reviewId',
+        onDelete: 'cascade',
+        hooks: true
       })
 
       Review.belongsTo(models.User, {
-        foreignKey: 'userId'
+        foreignKey: 'userId',
+        onDelete: 'cascade',
+        hooks: true
       })
 
       Review.belongsTo(models.Spot, {
-        foreignKey: 'spotId'
+        foreignKey: 'spotId',
+        onDelete: 'cascade',
+        hooks: true
       })
     }
   }
@@ -30,15 +36,18 @@ module.exports = (sequelize, DataTypes) => {
       references: {
         model: 'Users',
         key: 'id'
-      }
+      },
+      onDelete: 'cascade',
+      hooks: true
     },
     spotId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
       references: {
         model: 'Spots',
         key: 'id'
-      }
+      },
+      onDelete: 'cascade',
+      hooks: true
     },
     review: {
       type: DataTypes.TEXT,
