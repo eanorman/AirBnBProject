@@ -97,14 +97,15 @@ router.get('/:spotId', async (req, res, next) => {
     where:{
       id: spotId
     }
-
   })
+
   if(!spot){
     res.statusCode = 404;
     res.json({
       message: "Spot couldn't be found"
     })
   }
+
   await numberOfReviews(spot)
   await addAvgStarRating(spot)
   await getSpotImages(spot)
@@ -132,6 +133,41 @@ router.post('/', validateSpot, requireAuth, async (req, res, next) => {
      })
 
      res.json(spot);
+})
+
+// add an image to a spot based on the spot's id
+router.post('/:spotId/images', requireAuth, async (req, res, next) => {
+  const { user } = req;
+  const { spotId } = req.params;
+  const { url, preview } = req.body;
+
+  let spot = await Spot.findByPk(spotId);
+
+  if(!spot){
+    res.statusCode = 404;
+    res.json({
+      message: "Spot couldn't be found"
+    })
+  }
+
+  if(spot.ownerId !== user.id){
+    res.statusCode = 401;
+    res.json({
+      message: 'Unauthorized request'
+    })
+  }
+
+  let spotImage = await SpotImage.create({
+    spotId,
+    url,
+    preview
+  })
+
+  res.json({
+    id: spotImage.id,
+    url: spotImage.url,
+    preview: spotImage.preview
+  })
 })
 
 module.exports = router;
