@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const  sequelize  = require('sequelize')
+const { spotsWithPreview,spotsWithAverage } = require('../../utils/spot')
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { User, Spot, Review, SpotImage } = require('../../db/models');
@@ -63,40 +64,17 @@ const validateSpot = [
 
 // Get all spots
 router.get('/', async (req, res) => {
-    let spots = await Spot.findAll({
-        attributes: {
-            include: [
-                [
-                    sequelize.fn('AVG', sequelize.col('Reviews.stars')),
-                    "avgRating"
-                ]
-            ]
-        },
-        include: [
-            {
-            model: Review,
-            attributes: []
-            },
-            {
-                model: SpotImage,
-                where: {
-                    preview: true
-                },
-                attributes: ['url'],
-                as: 'previewImage'
-            }
-    ]
+    let spots = await Spot.findAll();
+
+   await spotsWithAverage(spots)
+   await spotsWithPreview(spots)
+
+    res.json({
+      Spots: spots
     });
-
-  // Extracting just the URL from the result
-  const spotsImageUrlOnly = spots.map(spot => {
-    const spotJson = spot.toJSON();
-    spotJson.previewImage = spotJson.previewImage[0].url;
-    return spotJson;
-  });
-
-  res.json(spotsImageUrlOnly);
 });
+
+
 
 // Create a spot
 router.post('/', validateSpot, requireAuth, async (req, res, next) => {
