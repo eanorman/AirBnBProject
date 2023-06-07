@@ -74,6 +74,20 @@ router.get('/', async (req, res) => {
     });
 });
 
+// Get all spots by current user
+router.get('/current', requireAuth, async (req, res, next) => {
+  let { user } = req;
+  let spots = await Spot.findAll({
+    where: {
+      ownerId: user.id
+    }
+  })
+  await spotsWithAverage(spots);
+  await spotsWithPreview(spots);
+  res.json({
+    Spots: spots
+  })
+})
 
 
 // Create a spot
