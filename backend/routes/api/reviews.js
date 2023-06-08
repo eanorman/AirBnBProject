@@ -84,4 +84,17 @@ router.put('/:reviewId', requireAuth, reviewAuth, validateReview, async (req, re
     res.json(updateReview)
 })
 
+router.delete('/:reviewId', requireAuth, reviewAuth, async (req, res, next) => {
+    let { reviewId } = req.params;
+
+    await Review.destroy({
+        where: {
+            id: reviewId
+        }
+    })
+    res.json({
+        message: "Successfully deleted"
+    })
+})
+
 module.exports = router;
