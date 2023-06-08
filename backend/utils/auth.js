@@ -131,4 +131,28 @@ const spotImageOwner = async function(req, res, next) {
    }
 }
 
-module.exports = { setTokenCookie, restoreUser, requireAuth, spotOwner, spotImageOwner };
+const spotReviewAuth = async function (req, res, next){
+  const { user } = req;
+  const { spotId } = req.params
+  let spot = await Spot.findByPk(spotId);
+  if(!spot){
+    res.statusCode = 404;
+    res.json({
+      message: "Spot couldn't be found"
+    })
+  } else {
+    let spotReviews = await spot.getReviews();
+    spotReviews.forEach((review) =>{
+      if(review.dataValues.userId === user.id){
+        res.statusCode = 403
+        res.json({
+          message: "User already has a review for this spot"
+        })
+      }
+    })
+    return next();
+  }
+
+}
+
+module.exports = { setTokenCookie, restoreUser, requireAuth, spotOwner, spotImageOwner, spotReviewAuth };

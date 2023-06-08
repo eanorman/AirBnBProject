@@ -3,7 +3,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { spotsWithPreview,spotsWithAverage, numberOfReviews, addAvgStarRating, getSpotImages, getSpotOwner } = require('../../utils/spot')
 const { getReviewSpot, getReviewUser, getReviewImages } = require('../../utils/review')
-const { requireAuth, spotOwner } = require('../../utils/auth');
+const { requireAuth, spotOwner, spotReviewAuth } = require('../../utils/auth');
 const { Spot, SpotImage, Review, ReviewImage } = require('../../db/models');
 
 const router = express.Router();
@@ -60,6 +60,23 @@ const validateSpot = [
     handleValidationErrors
   ];
 
+  const validateReview = [
+    check('review')
+      .exists({ checkFalsy: true })
+      .withMessage('Review text is required'),
+    check('stars')
+      .isNumeric()
+      .withMessage('Stars must be an integer from 1 to 5'),
+    check('stars')
+      .exists({ checkFalsy: true })
+      .withMessage('Stars must be an integer from 1 to 5'),
+    check('stars')
+      .isIn([1, 2, 3, 4, 5])
+      .withMessage('Stars must be an integer from 1 to 5'),
+    handleValidationErrors
+  ];
+
+
 // Get all spots
 router.get('/', async (req, res) => {
     let spots = await Spot.findAll();
@@ -99,6 +116,28 @@ router.get('/:spotId/reviews', requireAuth, async (req, res, next) => {
   await getReviewImages(reviews);
   res.json({
     Reviews: reviews});
+})
+
+// Create a review by spotId
+router.post('/:spotId/reviews', validateReview, requireAuth, spotReviewAuth, async (req, res, next) => {
+  const { review, stars } = req.body
+  const { user } = req;
+  const { spotId } = req.params
+  let spot = await Spot.findByPk(spotId);
+  if(!spot){
+    res.statusCode = 404;
+    res.json("Spot couldn't be found")
+  }
+
+   let spotReview = await Review.create({
+      userId: user.id,
+      spotId,
+      review,
+      stars
+   })
+
+
+   res.json(spotReview);
 })
 
 // Get a spot by spotId
