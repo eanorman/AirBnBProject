@@ -11,6 +11,7 @@ const { getSpotImages } = require('../../utils/spot');
 
 const router = express.Router();
 
+// Get all reviews from the current user
 router.get('/current', requireAuth, async (req, res, next) => {
     let { user } = req;
 

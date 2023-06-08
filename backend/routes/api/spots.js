@@ -2,8 +2,9 @@ const express = require('express');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { spotsWithPreview,spotsWithAverage, numberOfReviews, addAvgStarRating, getSpotImages, getSpotOwner } = require('../../utils/spot')
+const { getReviewSpot, getReviewUser, getReviewImages } = require('../../utils/review')
 const { requireAuth, spotOwner } = require('../../utils/auth');
-const { Spot, SpotImage } = require('../../db/models');
+const { Spot, SpotImage, Review, ReviewImage } = require('../../db/models');
 
 const router = express.Router();
 
@@ -84,6 +85,20 @@ router.get('/current', requireAuth, async (req, res, next) => {
   res.json({
     Spots: spots
   })
+})
+
+// Get reviews by spotId
+router.get('/:spotId/reviews', requireAuth, async (req, res, next) => {
+  let { spotId } = req.params;
+  let reviews = await Review.findAll({
+    where: {
+      spotId
+    }
+  })
+  await getReviewUser(reviews);
+  await getReviewImages(reviews);
+  res.json({
+    Reviews: reviews});
 })
 
 // Get a spot by spotId
