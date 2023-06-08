@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { jwtConfig } = require('../config');
-const { User, Spot, SpotImage } = require('../db/models');
+const { User, Spot, SpotImage, Review } = require('../db/models');
 
 const { secret, expiresIn } = jwtConfig;
 
@@ -152,7 +152,30 @@ const spotReviewAuth = async function (req, res, next){
     })
     return next();
   }
-
 }
 
-module.exports = { setTokenCookie, restoreUser, requireAuth, spotOwner, spotImageOwner, spotReviewAuth };
+const reviewAuth = async function(req, res, next){
+  let { reviewId } = req.params;
+  let { user } = req;
+
+  let review = await Review.findByPk(reviewId);
+
+  if(!review){
+    res.statusCode = 404;
+    res.json({
+      message: "Review couldn't be found"
+    })
+  } else {
+      if(review.userId !== user.id){
+        const err = new Error('Authentication required');
+        err.title = 'Authentication required';
+        err.errors = { message: 'Authentication required' };
+        err.status = 401;
+        return next(err);
+      } else{
+        return next();
+      }
+  }
+}
+
+module.exports = { setTokenCookie, restoreUser, requireAuth, spotOwner, spotImageOwner, spotReviewAuth, reviewAuth };
