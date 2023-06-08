@@ -43,12 +43,10 @@ module.exports = (sequelize, DataTypes) => {
       hooks: true
     },
     startDate: {
-      type: DataTypes.DATE,
-      allowNull: false
+      type: DataTypes.DATEONLY
     },
     endDate: {
-      type: DataTypes.DATE,
-      allowNull: false
+      type: DataTypes.DATEONLY
     }
   }, {
     sequelize,

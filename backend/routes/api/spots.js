@@ -4,7 +4,7 @@ const { handleValidationErrors } = require('../../utils/validation');
 const { spotsWithPreview,spotsWithAverage, numberOfReviews, addAvgStarRating, getSpotImages, getSpotOwner } = require('../../utils/spot')
 const { getReviewSpot, getReviewUser, getReviewImages } = require('../../utils/review')
 const { requireAuth, spotOwner, spotReviewAuth } = require('../../utils/auth');
-const { Spot, SpotImage, Review, ReviewImage } = require('../../db/models');
+const { Spot, SpotImage, Review, ReviewImage, User, Booking } = require('../../db/models');
 
 const router = express.Router();
 
@@ -138,6 +138,50 @@ router.post('/:spotId/reviews', validateReview, requireAuth, spotReviewAuth, asy
 
 
    res.json(spotReview);
+})
+
+// Get bookings by spotId
+router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
+  const { user } = req;
+  const { spotId } = req.params;
+
+  const spot = await Spot.findByPk(spotId);
+
+  if(!spot){
+    res.statusCode = 404;
+    res.json({
+      message: "Spot couldn't be found"
+    })
+  } else {
+    if(spot.ownerId === user.id){
+      const bookings = await Booking.findAll({
+        where: {
+          spotId
+        },
+          include: {
+            model: User,
+            attributes: ['id', 'firstName', 'lastName']
+        }
+      })
+      res.json({
+        Bookings: bookings
+      })
+    } else {
+      const bookings = await Booking.findAll({
+        where: {
+          spotId
+        },
+        attributes:{
+          exclude: ['id', 'userId', 'createdAt', 'updatedAt']
+        }
+      })
+      res.json({
+        Bookings: bookings}
+        )
+    }
+
+  }
+
 })
 
 // Get a spot by spotId

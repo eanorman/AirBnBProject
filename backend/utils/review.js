@@ -49,7 +49,7 @@ async function getReviewSpotPreview(reviews){
                 preview: true
             }
         })
-        console.log(preview)
+
         review.dataValues.Spot.dataValues.previewImage = preview.dataValues.url;
         return review
     }))
