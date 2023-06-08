@@ -11,6 +11,22 @@ const { getSpotImages } = require('../../utils/spot');
 
 const router = express.Router();
 
+const validateReview = [
+    check('review')
+      .exists({ checkFalsy: true })
+      .withMessage('Review text is required'),
+    check('stars')
+      .isNumeric()
+      .withMessage('Stars must be an integer from 1 to 5'),
+    check('stars')
+      .exists({ checkFalsy: true })
+      .withMessage('Stars must be an integer from 1 to 5'),
+    check('stars')
+      .isIn([1, 2, 3, 4, 5])
+      .withMessage('Stars must be an integer from 1 to 5'),
+    handleValidationErrors
+  ];
+
 // Get all reviews from the current user
 router.get('/current', requireAuth, async (req, res, next) => {
     let { user } = req;
@@ -52,6 +68,20 @@ router.post('/:reviewId/images', requireAuth, reviewAuth, async (req, res, next)
 
         res.json(newImage)
     }
+});
+
+router.put('/:reviewId', requireAuth, reviewAuth, validateReview, async (req, res, next) => {
+    const { review, stars } = req.body;
+    const { reviewId } = req.params;
+    const { user } = req;
+
+    const updateReview = await Review.findByPk(reviewId)
+
+    await updateReview.update({
+        review,
+        stars
+    })
+    res.json(updateReview)
 })
 
 module.exports = router;
