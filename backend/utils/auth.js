@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { jwtConfig } = require('../config');
-const { User, Spot, SpotImage, Review, ReviewImage } = require('../db/models');
+const { User, Spot, SpotImage, Review, ReviewImage, Booking } = require('../db/models');
+const { response } = require('express');
 
 const { secret, expiresIn } = jwtConfig;
 
@@ -203,4 +204,52 @@ const reviewImageAuth = async function(req, res, next) {
   }
 }
 
-module.exports = { setTokenCookie, restoreUser, requireAuth, spotOwner, spotImageOwner, spotReviewAuth, reviewAuth, reviewImageAuth };
+const bookingDateValid = async function(req, res, next) {
+  let { spotId } = req.params
+  let { startDate, endDate } = req.body;
+  let bookings = await Booking.findAll({  where:{  spotId  } });
+
+  let bookedDates = []
+
+  let responseMessage = {
+    message: "Sorry, this spot is already booked for the specified dates",
+    errors: {}
+  }
+
+  for(let i = 0; i < bookings.length; i++){
+    let booking = bookings[i];
+    let startDate = booking.startDate;
+    let endDate = booking.endDate;
+
+    let bookedDate = [startDate, endDate];
+    bookedDates.push(bookedDate)
+  }
+  for(let i = 0; i < bookedDates.length; i++) {
+    let bookedDate = bookedDates[i];
+
+
+   if((startDate <= bookedDate[0]) && !(endDate < bookedDate[1])){
+    responseMessage.errors.endDate = "End date conflicts with an existing booking"
+   }
+   if((startDate >= bookedDate[0]) && !(startDate > bookedDate[1])){
+    responseMessage.errors.startDate = "Start date conflicts with an existing booking"
+   }
+   if((startDate > bookedDate[0]) && (endDate < bookedDate[1])){
+    responseMessage.errors.endDate = "End date conflicts with an existing booking"
+   }
+
+
+  }
+ let size = Object.keys(responseMessage.errors)
+ console.log(size)
+  if(size.length > 0){
+    res.statusCode = 403;
+    res.json(responseMessage)
+  } else{
+    return next();
+  }
+
+
+}
+
+module.exports = { setTokenCookie, restoreUser, requireAuth, spotOwner, spotImageOwner, spotReviewAuth, reviewAuth, reviewImageAuth, bookingDateValid };
