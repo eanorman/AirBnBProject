@@ -22,28 +22,19 @@ async function spotsWithPreview(spots) {
 async function spotsWithAverage(spots) {
   await Promise.all(
     spots.map(async (spot) => {
-      let rating = await Spot.findOne({
+      let rating = await Review.findOne({
         attributes: [
           [
-            sequelize.fn('AVG', sequelize.col('Reviews.stars')),
+            sequelize.fn('AVG', sequelize.col('stars')),
             'avgRating',
           ],
         ],
-        include: [
-          {
-            model: Review,
-            where: {
-              spotId: spot.id,
-            },
-            attributes: [],
-          },
-        ],
-        group: ['Spot.id'],
+        where: {
+          spotId: spot.id,
+        },
       });
 
-      console.log(rating)
-
-      spot.avgRating = rating[0].avgRating;
+      spot.avgRating = rating.avgRating;
 
       return spot;
     })
