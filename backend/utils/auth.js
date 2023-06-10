@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { jwtConfig } = require('../config');
-const { User } = require('../db/models');
+const { User, Spot, SpotImage, Review, ReviewImage } = require('../db/models');
 
 const { secret, expiresIn } = jwtConfig;
 
@@ -70,4 +70,137 @@ const requireAuth = function (req, _res, next) {
     return next(err);
   }
 
-module.exports = { setTokenCookie, restoreUser, requireAuth };
+// Checks if current user is the owner of the spot
+const spotOwner = async function(req, res, next) {
+  const { user } = req;
+  const { spotId } = req.params;
+
+  let spot = await Spot.findByPk(spotId);
+
+
+  if(!spot){
+   res.statusCode = 404;
+   res.json({
+     message: "Spot couldn't be found"
+   })
+  } else {
+    if(spot.ownerId !== user.id){
+      const err = new Error('Authentication required');
+      err.title = 'Authentication required';
+      err.errors = { message: 'Authentication required' };
+      err.status = 401;
+      return next(err);
+    }
+
+    return next();
+
+  }
+
+}
+
+const spotImageOwner = async function(req, res, next) {
+  const { user } = req;
+  const { imageId } = req.params;
+
+  let spotImage = await SpotImage.findOne({
+    where: {
+      id: imageId
+    }
+  });
+
+
+
+  if(!spotImage){
+    res.statusCode = 404;
+    res.json({
+      message: "Spot Image couldn't be found"
+    })
+  } else {
+    let spotId = spotImage.dataValues.spotId
+    let spot = await Spot.findByPk(spotId)
+    if(spot.ownerId !== user.id){
+       const err = new Error('Authentication required');
+       err.title = 'Authentication required';
+       err.errors = { message: 'Authentication required' };
+       err.status = 401;
+       return next(err);
+     }
+
+     return next();
+
+   }
+}
+
+const spotReviewAuth = async function (req, res, next){
+  const { user } = req;
+  const { spotId } = req.params
+  let spot = await Spot.findByPk(spotId);
+  if(!spot){
+    res.statusCode = 404;
+    res.json({
+      message: "Spot couldn't be found"
+    })
+  } else {
+    let spotReviews = await spot.getReviews();
+    spotReviews.forEach((review) =>{
+      if(review.dataValues.userId === user.id){
+        res.statusCode = 403
+        res.json({
+          message: "User already has a review for this spot"
+        })
+      }
+    })
+    return next();
+  }
+}
+
+const reviewAuth = async function(req, res, next){
+  let { reviewId } = req.params;
+  let { user } = req;
+
+  let review = await Review.findByPk(reviewId);
+
+  if(!review){
+    res.statusCode = 404;
+    res.json({
+      message: "Review couldn't be found"
+    })
+  } else {
+      if(review.userId !== user.id){
+        const err = new Error('Authentication required');
+        err.title = 'Authentication required';
+        err.errors = { message: 'Authentication required' };
+        err.status = 401;
+        return next(err);
+      } else{
+        return next();
+      }
+  }
+}
+
+const reviewImageAuth = async function(req, res, next) {
+  let { user } = req;
+  let { imageId } = req.params;
+
+  let reviewImage = await ReviewImage.findByPk(imageId);
+
+  if(!reviewImage){
+    res.statusCode = 404;
+    res.json({
+      message: "Review Image couldn't be found"
+    })
+  } else {
+    let review = await Review.findByPk(reviewImage.reviewId);
+    if(review.userId !== user.id){
+      const err = new Error('Authentication required');
+      err.title = 'Authentication required';
+      err.errors = { message: 'Authentication required' };
+      err.status = 401;
+      return next(err);
+    } else {
+      return next();
+    }
+  }
+}
+
+module.exports = { setTokenCookie, restoreUser, requireAuth, spotOwner, spotImageOwner, spotReviewAuth, reviewAuth, reviewImageAuth };
