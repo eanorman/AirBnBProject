@@ -78,7 +78,8 @@ async function addAvgStarRating(spot){
               spotId: spot.id
             },
             attributes: []
-          }
+          },
+          group: ['Spot.id']
     })
 
     spot.dataValues.avgStarRating = rating[0].dataValues.avgStarRating;
