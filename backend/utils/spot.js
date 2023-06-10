@@ -29,7 +29,7 @@ async function spotsWithAverage(spots) {
             where: {
               spotId: spot.id
             },
-            subQuery: false,
+            duplicating: true,
             attributes: []
           }
         ],
