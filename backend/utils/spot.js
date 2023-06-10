@@ -20,28 +20,34 @@ async function spotsWithPreview(spots) {
 
 //adds average rating to a spot
 async function spotsWithAverage(spots) {
-    await Promise.all(spots.map(async (spot) => {
-
-        let rating = await Spot.findAll({
-          attributes: [[sequelize.fn('AVG', sequelize.col('Reviews.stars')), 'avgRating']],
-          include:[ {
+  await Promise.all(
+    spots.map(async (spot) => {
+      let rating = await Spot.findAll({
+        attributes: [
+          [
+            sequelize.fn('AVG', sequelize.col('Reviews.stars')),
+            'avgRating',
+          ],
+        ],
+        include: [
+          {
             model: Review,
             where: {
-              '$spotId$': spot.id
+              spotId: spot.id,
             },
-            subQuery: false,
-            attributes: []
-          }
+            attributes: [],
+          },
         ],
-        group: ['Spots.id']
-        });
+        group: ['Spot.id'],
+      });
 
-        spot.dataValues.avgRating = rating[0].dataValues.avgRating;
+      spot.dataValues.avgRating = rating[0].dataValues.avgRating;
 
-        return spot;
-    }))
+      return spot;
+    })
+  );
 
-    return spots;
+  return spots;
 }
 
 async function numberOfReviews(spot) {
