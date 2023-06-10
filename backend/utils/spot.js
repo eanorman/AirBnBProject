@@ -27,9 +27,9 @@ async function spotsWithAverage(spots) {
           include:[ {
             model: Review,
             where: {
-              spotId: spot.id
+              '$spotId$': spot.id
             },
-            duplicating: true,
+            subQuery: false,
             attributes: []
           }
         ],
