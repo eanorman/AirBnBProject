@@ -5,6 +5,9 @@ const { spotsWithPreview,spotsWithAverage, numberOfReviews, addAvgStarRating, ge
 const { getReviewSpot, getReviewUser, getReviewImages } = require('../../utils/review')
 const { requireAuth, spotOwner, spotReviewAuth, bookingDateValid } = require('../../utils/auth');
 const { Spot, SpotImage, Review, ReviewImage, User, Booking } = require('../../db/models');
+const {validateQuery,spotFilter } = require('../../utils/spot-filter')
+
+const { Op } = require("sequelize");
 
 const router = express.Router();
 
@@ -77,15 +80,72 @@ const validateSpot = [
   ];
 
 
+
 // Get all spots
-router.get('/', async (req, res) => {
-    let spots = await Spot.findAll();
+router.get('/', validateQuery,  async (req, res) => {
+  let {page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
+
+  page = parseInt(page);
+  size = parseInt(size)
+
+
+  if (isNaN(page)) page = 1;
+  if (isNaN(size)) size = 20;
+  if (page > 10 || page < 1) page = 1
+  if (size > 20 || size < 1) size = 20;
+
+  const where = {};
+  if(minLat && maxLat){
+    minLat = parseInt(minLat)
+    maxLat = parseInt(maxLat)
+    where.lat = { [Op.and]: [{[Op.gte]: minLat},  {[Op.lte]: maxLat}] }
+
+  } else if(minLat){
+    minLat = parseInt(minLat)
+    where.lat = { [Op.gte]: minLat }
+
+  } else if(maxLat){
+    maxLat = parseInt(maxLat)
+    where.lat = { [Op.lte]: maxLat }
+  }
+
+  if(minLng && maxLng){
+    minLng = parseInt(minLng)
+    maxLng = parseInt(maxLng)
+    where.lng = { [Op.and]: [{[Op.gte]: minLng},  {[Op.lte]: maxLng}] }
+
+  } else if(minLng){
+    minLat = parseInt(minLng)
+    where.lng = { [Op.gte]: minLng }
+
+  } else if(maxLng){
+    maxLat = parseInt(maxLng)
+    where.lng = { [Op.lte]: maxLng }
+  }
+
+  if(minPrice && maxPrice){
+    minPrice = parseInt(minPrice)
+    maxPrice = parseInt(maxPrice)
+    where.price = { [Op.and]: [{[Op.gte]: minPrice},  {[Op.lte]: maxPrice}] }
+
+  } else if(minPrice){
+    minPrice = parseInt(minPrice)
+    where.price = { [Op.gte]: minPrice }
+
+  } else if(maxPrice){
+    maxPrice = parseInt(maxPrice)
+    where.price = { [Op.lte]: maxPrice }
+  }
+
+  let spots = await Spot.findAll({where, limit: size, offset: size * (page - 1)});
 
    await spotsWithAverage(spots)
    await spotsWithPreview(spots)
 
     res.json({
-      Spots: spots
+      Spots: spots,
+      page,
+      size
     });
 });
 
