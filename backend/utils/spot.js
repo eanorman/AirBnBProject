@@ -41,7 +41,7 @@ async function spotsWithAverage(spots) {
         group: ['Spot.id'],
       });
 
-      spot.dataValues.avgRating = rating[0].dataValues.avgRating;
+      spot.avgRating = rating[0].avgRating;
 
       return spot;
     })
