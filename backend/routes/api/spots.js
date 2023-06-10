@@ -137,7 +137,7 @@ router.get('/', validateQuery,  async (req, res) => {
     where.price = { [Op.lte]: maxPrice }
   }
 
-  let spots = await Spot.findAll({where, limit: size, offset: size * (page - 1)});
+  let spots = await Spot.findAll({where, limit: size, offset: size * (page - 1), group: ['Spot.id']});
 
    await spotsWithAverage(spots)
    await spotsWithPreview(spots)
