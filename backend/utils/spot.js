@@ -26,6 +26,8 @@ async function spotsWithAverage(spots) {
           attributes: [[sequelize.fn('AVG', sequelize.col('Reviews.stars')), 'avgRating']],
           include:[ {
             model: Review,
+            required: true,
+            duplicating: false,
             where: {
               spotId: spot.id
             },
