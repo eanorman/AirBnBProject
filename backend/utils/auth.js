@@ -207,6 +207,7 @@ const reviewImageAuth = async function(req, res, next) {
 const bookingDateValid = async function(req, res, next) {
   let { spotId } = req.params
   let { startDate, endDate } = req.body;
+  let { user } = req;
   let bookings = await Booking.findAll({  where:{  spotId  } });
 
   let bookedDates = []
@@ -214,6 +215,31 @@ const bookingDateValid = async function(req, res, next) {
   let responseMessage = {
     message: "Sorry, this spot is already booked for the specified dates",
     errors: {}
+  }
+
+  let spot = await Spot.findByPk(spotId)
+  if(!spot){
+    res.statusCode = 404;
+    res.json({
+      message: "Spot couldn't be found"
+    })
+  }
+
+  if(spot.ownerId === user.id){
+    res.statusCode = 403;
+    res.json({
+      message: "Cannot create booking at a spot you own."
+    })
+  }
+
+  if(startDate > endDate){
+    res.statusCode = 403;
+    res.json({
+      message: "Bad Request",
+      errors: {
+        endDate: "endDate cannot be on or before startDate"
+      }
+    })
   }
 
   for(let i = 0; i < bookings.length; i++){

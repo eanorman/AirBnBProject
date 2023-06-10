@@ -186,8 +186,19 @@ router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
 
 // Create a booking
 router.post('/:spotId/bookings', requireAuth, bookingDateValid, async (req, res, next) => {
-  res.json({message: 'you got here'})
+  let { spotId } = req.params;
+  const { startDate, endDate } = req.body;
+  const { user } = req;
+  spotId = parseInt(spotId)
+  const newBooking = await Booking.create({
+    spotId,
+    userId: user.id,
+    startDate,
+    endDate
+  })
+  res.json(newBooking)
 })
+
 
 // Get a spot by spotId
 router.get('/:spotId', async (req, res, next) => {
