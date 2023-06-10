@@ -11,7 +11,7 @@ async function spotsWithPreview(spots) {
             preview: true
           }
         });
-        spot.dataValues.previewImage = preview.dataValues.url;
+        spot.previewImage = preview.url;
         return spot;
       }))
 
