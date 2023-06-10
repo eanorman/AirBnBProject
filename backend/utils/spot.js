@@ -29,7 +29,7 @@ async function spotsWithAverage(spots) {
                 sequelize.fn('AVG', sequelize.col('Reviews.stars')),
                 'avgRating'
               ]
-            ]
+            ], group: ['Spot.id']
           },
 
           include: {
@@ -70,7 +70,7 @@ async function addAvgStarRating(spot){
                     sequelize.fn('AVG', sequelize.col('Reviews.stars')),
                     'avgStarRating'
                 ]
-            ]
+            ], group: ['Spot.id']
         },
         include: {
             model: Review,
@@ -79,7 +79,7 @@ async function addAvgStarRating(spot){
             },
             attributes: []
           },
-          group: ['Spot.id']
+
     })
 
     spot.dataValues.avgStarRating = rating[0].dataValues.avgStarRating;
