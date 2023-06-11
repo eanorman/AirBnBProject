@@ -34,8 +34,8 @@ async function spotsWithAverage(spots) {
         },
       });
 
-      let ratingNumber = rating.dataValues.avgRating.toFixed(1)
-      spot.dataValues.avgRating = ratingNumber;
+      let ratingNumber = rating.dataValues.avgRating;
+      spot.dataValues.avgRating = parseInt(ratingNumber.toFixed(1));
       console.log(spot);
       return spot;
     })
