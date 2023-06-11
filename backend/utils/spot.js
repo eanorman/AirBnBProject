@@ -69,9 +69,9 @@ async function addAvgStarRating(spot){
     },
   });
 
-    spot.dataValues.avgStarRating = rating[0].dataValues.avgStarRating;
-
-    return spot;
+  let ratingNumber = rating.dataValues.avgRating;
+  spot.dataValues.avgStarRating = Number.parseFloat(ratingNumber).toFixed(1)
+  return spot;
 }
 
 async function getSpotImages(spot){
