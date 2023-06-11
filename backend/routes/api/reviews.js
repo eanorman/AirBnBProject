@@ -81,7 +81,7 @@ router.post('/:reviewId/images', requireAuth, reviewAuth, async (req, res, next)
               }
         })
 
-        res.json(newImage)
+        res.json(returnImage)
     }
 });
 

@@ -208,16 +208,16 @@ const bookingAuth = async function(req, res, next){
   const { bookingId } = req.params;
   const { user } = req;
   let booking = await Booking.findOne({ where: {id: bookingId}})
-  let spotId = booking.spotId
-  let spot = await Spot.findByPk(spotId)
 
-  if(!booking || !spot){
+  if(!booking){
     res.statusCode = 404;
     res.json({
       message: "Spot couldn't be found"
     })
     return;
   }
+  let spotId = booking.spotId
+  let spot = await Spot.findByPk(spotId)
   if(booking.userId !== user.id && spot.ownerId !== user.id){
     res.statusCode = 403;
     res.json({
