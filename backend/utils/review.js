@@ -34,7 +34,7 @@ async function getReviewSpot(reviews){
                 exclude: ['updatedAt', 'createdAt', 'description']
             }
         })
-        review.dataValues.Spot = spot;
+        review.Review.dataValues.Spot = spot;
     }))
 
     await getReviewSpotPreview(reviews);
