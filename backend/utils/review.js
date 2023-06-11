@@ -15,9 +15,9 @@ async function getReviewUser(reviews){
             exclude: ['username']
           }
         });
-        console.log(review.Review)
-        console.log(review.dataValues)
-        review.Review.dataValues.User = user;
+
+
+        review.dataValues.User = user;
         return review;
       }))
 
