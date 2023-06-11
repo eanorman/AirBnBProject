@@ -11,7 +11,7 @@ async function spotsWithPreview(spots) {
             preview: true
           }
         });
-        spot.previewImage = preview.url;
+        spot= {...spot, previewImage: preview.url}
         return spot;
       }))
 
@@ -34,7 +34,7 @@ async function spotsWithAverage(spots) {
         },
       });
 
-      spot.avgRating = rating.avgRating;
+      spot = {...spot, avgRating: rating.avgRating}
 
       return spot;
     })
