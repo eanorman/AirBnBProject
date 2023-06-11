@@ -17,7 +17,7 @@ async function getReviewUser(reviews){
         });
 
 
-        review.User = user;
+        review.dataValues.User = user;
         return review;
       }))
 
@@ -35,7 +35,7 @@ async function getReviewSpot(reviews){
                 exclude: ['updatedAt', 'createdAt', 'description']
             }
         })
-        review.Spot = spot;
+        review.dataValues.Spot = spot;
     }))
 
     await getReviewSpotPreview(reviews);
@@ -52,7 +52,7 @@ async function getReviewSpotPreview(reviews){
             }
         })
         if(preview){
-            review.Spot.previewImage = preview.dataValues.url;
+            review.dataValues.Spot.dataValues.previewImage = preview.dataValues.url;
         }
         return review
     }))
