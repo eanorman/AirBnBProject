@@ -211,7 +211,7 @@ const bookingAuth = async function(req, res, next){
   let spotId = booking.spotId
   let spot = await Spot.findByPk(spotId)
 
-  if(!booking){
+  if(!booking || !spot){
     res.statusCode = 404;
     res.json({
       message: "Spot couldn't be found"
