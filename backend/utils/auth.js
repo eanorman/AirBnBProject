@@ -233,7 +233,7 @@ const bookingAuth = async function(req, res, next){
   let year = date.getFullYear();
 
   let currentDate = `${year}-${month}-${day}`
-  console.log(booking.startDate)
+  console.log(booking.dataValues.startDate)
 
   if(currentDate > booking.startDate){
     res.statusCode = 403
