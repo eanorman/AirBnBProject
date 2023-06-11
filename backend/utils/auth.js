@@ -210,7 +210,6 @@ const bookingAuth = async function(req, res, next){
   let booking = await Booking.findOne({ where: {id: bookingId}})
   let spotId = booking.spotId
   let spot = await Spot.findByPk(spotId)
-  console.log(spot.ownerId)
 
   if(!booking){
     res.statusCode = 404;
@@ -234,8 +233,9 @@ const bookingAuth = async function(req, res, next){
 
   let currentDate = `${year}-${month}-${day}`
   console.log(booking.dataValues.startDate)
+  console.log(currentDate)
 
-  if(currentDate > booking.startDate){
+  if(currentDate > booking.dataValues.startDate){
     res.statusCode = 403
     res.json({
       message: "Bookings that have been started can't be deleted"
