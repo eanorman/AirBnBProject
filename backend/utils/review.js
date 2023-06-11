@@ -16,7 +16,7 @@ async function getReviewUser(reviews){
           }
         });
         console.log(review)
-        review.dataValues.User = user;
+        review.Review.dataValues.User = user;
         return review;
       }))
 
