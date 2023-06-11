@@ -36,7 +36,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
             userId: user.id
         }
     })
-    console.log(`*********BEFORE THE HELPERS ${reviews}***********************`)
+
 
     await getReviewUser(reviews)
     await getReviewSpot(reviews);
