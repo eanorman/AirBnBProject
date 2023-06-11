@@ -35,7 +35,7 @@ async function getReviewSpot(reviews){
                 exclude: ['updatedAt', 'createdAt', 'description']
             }
         })
-        review.Review.dataValues.Spot = spot;
+        review.Spot = spot;
     }))
 
     await getReviewSpotPreview(reviews);
@@ -74,7 +74,7 @@ async function getReviewImages(reviews){
             }
             imageArr.push(newImgObj);
         }
-        review.dataValues.ReviewImages = imageArr
+        review.ReviewImages = imageArr
     }))
 
     return reviews;
