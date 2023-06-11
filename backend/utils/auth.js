@@ -234,9 +234,9 @@ const bookingAuth = async function(req, res, next){
   let currentDate = new Date(`${year}-${month}-${day}`)
   let bookingStartDate = new Date(booking.dataValues.startDate)
   console.log(bookingStartDate)
-  console.log(currentDate)
+  console.log(date)
 
-  if(currentDate > booking.dataValues.startDate){
+  if(date > bookingStartDate){
     res.statusCode = 403
     res.json({
       message: "Bookings that have been started can't be deleted"
