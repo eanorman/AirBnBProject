@@ -79,6 +79,7 @@ router.post('/:reviewId/images', requireAuth, reviewAuth, async (req, res, next)
                 exclude: ["reviewId", 'createdAt', 'updatedAt']
               }
         })
+        console.log(newImage.dataValues.id)
 
         res.json(returnImage)
     }
