@@ -35,7 +35,7 @@ async function spotsWithAverage(spots) {
       });
 
       spot = {...spot, avgRating: rating.avgRating}
-
+      console.log(spot);
       return spot;
     })
   );
