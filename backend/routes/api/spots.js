@@ -170,7 +170,7 @@ router.get('/:spotId/reviews', requireAuth, async (req, res, next) => {
   let spot = await Spot.findByPk(spotId)
   if(!spot){
     res.statusCode = 404;
-    res.json("Spot couldn't be found")
+    res.json({message: "Spot couldn't be found"})
   }
   let reviews = await Review.findAll({
     where: {
@@ -237,7 +237,8 @@ router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
           spotId
         },
         attributes:{
-          exclude: ['id', 'userId', 'createdAt', 'updatedAt']
+          include: ['id', 'url'],
+          exclude: ['userId', 'createdAt', 'updatedAt']
         }
       })
       res.json({
