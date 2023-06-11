@@ -52,7 +52,7 @@ async function getReviewSpotPreview(reviews){
             }
         })
 
-        review.dataValues.Spot.dataValues.previewImage = preview.dataValues.url;
+        review.Spot.previewImage = preview.url;
         return review
     }))
     return reviews;
