@@ -36,7 +36,12 @@ router.get('/current', requireAuth, async (req, res, next) => {
             userId: user.id
         }
     })
-
+    if(!reviews){
+        res.statusCode = 404;
+        res.json({
+            message: 'You have no reviews.'
+        })
+    }
 
     await getReviewUser(reviews)
     await getReviewSpot(reviews);

@@ -75,7 +75,7 @@ async function getReviewImages(reviews){
             }
             imageArr.push(newImgObj);
         }
-        review.ReviewImages = imageArr
+        review.dataValues.ReviewImages = imageArr
     }))
 
     return reviews;
