@@ -34,7 +34,8 @@ async function spotsWithAverage(spots) {
         },
       });
 
-      spot.dataValues.avgRating = rating.dataValues.avgRating;
+      let ratingNumber = rating.dataValues.avgRating.toFixed(1)
+      spot.dataValues.avgRating = ratingNumber;
       console.log(spot);
       return spot;
     })
@@ -57,24 +58,17 @@ async function numberOfReviews(spot) {
 }
 
 async function addAvgStarRating(spot){
-    let rating = await Spot.findAll({
-        attributes: {
-            include: [
-                [
-                    sequelize.fn('AVG', sequelize.col('Reviews.stars')),
-                    'avgStarRating'
-                ]
-            ], group: ['Spot.id']
-        },
-        include: {
-            model: Review,
-            where: {
-              spotId: spot.id
-            },
-            attributes: []
-          },
-
-    })
+  let rating = await Review.findAll({
+    attributes: [
+      [
+        sequelize.fn('AVG', sequelize.col('stars')),
+        'avgRating',
+      ],
+    ],
+    where: {
+      spotId: spot.id,
+    },
+  });
 
     spot.dataValues.avgStarRating = rating[0].dataValues.avgStarRating;
 
