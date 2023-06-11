@@ -219,7 +219,7 @@ const bookingAuth = async function(req, res, next){
     })
     return;
   }
-  if(booking.userId !== user.id || spot.ownerId !== user.id){
+  if(booking.userId !== user.id && spot.ownerId !== user.id){
     res.statusCode = 403;
     res.json({
       message: "Cannot delete a booking that is not your own."

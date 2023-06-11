@@ -25,7 +25,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
     await bookingSpot(bookings);
     await bookingsSpotPreview(bookings);
 
-    res.json(bookings)
+    res.json({Bookings: bookings})
 })
 
 // Edit a booking
