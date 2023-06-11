@@ -73,7 +73,7 @@ router.post('/:reviewId/images', requireAuth, reviewAuth, async (req, res, next)
         })
         const returnImage = ReviewImage.findOne({
             where: {
-                id: newImage.id
+                id: newImage.dataValues.id
             },
             attributes: {
                 exclude: ["reviewId", 'createdAt', 'updatedAt']
