@@ -70,9 +70,8 @@ async function addAvgStarRating(spot){
   });
 
   let ratingNumber = rating[0].dataValues.avgRating;
-
-  console.log(rating)
-  spot.dataValues.avgStarRating = Number.parseFloat(ratingNumber).toFixed(1)
+  ratingNumber = Number.parseFloat(ratingNumber).toFixed(1)
+  spot.dataValues.avgStarRating = Number.parseFloat(ratingNumber)
   return spot;
 }
 
