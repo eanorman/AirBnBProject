@@ -17,7 +17,7 @@ async function getReviewUser(reviews){
         });
 
 
-        review.dataValues.User = user;
+        review.User = user;
         return review;
       }))
 
