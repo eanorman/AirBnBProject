@@ -76,7 +76,6 @@ router.post('/:reviewId/images', requireAuth, reviewAuth, async (req, res, next)
                 id: newImage.id
             },
             attributes: {
-                include: ['id', 'url'],
                 exclude: ["reviewId", 'createdAt', 'updatedAt']
               }
         })
