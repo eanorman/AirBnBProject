@@ -231,8 +231,9 @@ const bookingAuth = async function(req, res, next){
   let month = date.getMonth() + 1;
   let year = date.getFullYear();
 
-  let currentDate = `${year}-${month}-${day}`
-  console.log(booking.dataValues.startDate)
+  let currentDate = new Date(`${year}-${month}-${day}`)
+  let bookingStartDate = new Date(booking.dataValues.startDate)
+  console.log(bookingStartDate)
   console.log(currentDate)
 
   if(currentDate > booking.dataValues.startDate){
