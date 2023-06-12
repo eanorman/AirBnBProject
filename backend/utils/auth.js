@@ -71,33 +71,50 @@ const requireAuth = function (req, _res, next) {
     return next(err);
   }
 
-// Checks if current user is the owner of the spot
-const spotOwner = async function(req, res, next) {
-  const { user } = req;
-  const { spotId } = req.params;
+// Checks that spot exists
+const spotExists = async function(req, res, next){
+  let {spotId} = req.params;
+  const spot = await Spot.findByPk(spotId);
 
-  let spot = await Spot.findByPk(spotId);
-
-
-  if(!spot){
-   res.statusCode = 404;
-   res.json({
-     message: "Spot couldn't be found"
-   })
-  } else {
-    if(spot.ownerId !== user.id){
-      const err = new Error('Authentication required');
-      err.title = 'Authentication required';
-      err.errors = { message: 'Authentication required' };
-      err.status = 401;
-      return next(err);
-    }
-
-    return next();
-
+  if (!spot){
+    const err = new Error("Spot couldn't be found");
+    err.title = "Spot couldn't be found";
+    err.errors = { message: "Spot couldn't be found"};
+    err.status = 404;
+    return next(err);
   }
 
+  return next();
 }
+
+// Checks that user owns the spot
+const spotAuth = async function (req, res, next) {
+  let {spotId} = req.params;
+  let {user} = req;
+  const spot = await Spot.findByPk(spotId);
+  if(spot.ownerId !== user.id){
+    const err = new Error("Forbidden");
+    err.title = "Forbidden";
+    err.errors = { message: "Forbidden"};
+    err.status = 403;
+    return next(err);
+  }
+  return next();
+}
+
+// If no current user, returns null
+const currentUser = async function (req, res, next) {
+  if(req.user) return next();
+  else return res.json({ user: null });
+}
+
+
+
+
+
+
+
+
 
 const spotImageOwner = async function(req, res, next) {
   const { user } = req;
@@ -145,7 +162,7 @@ const spotReviewAuth = async function (req, res, next){
     let spotReviews = await spot.getReviews();
     spotReviews.forEach((review) =>{
       if(review.dataValues.userId === user.id){
-        res.statusCode = 403
+        res.statusCode = 403;
         res.json({
           message: "User already has a review for this spot"
         })
@@ -320,96 +337,4 @@ const bookingDateValid = async function(req, res, next) {
 
 }
 
-const editBookingValid = async function (req, res, next) {
-  let { bookingId } = req.params
-  let { startDate, endDate } = req.body;
-  let { user } = req;
-
-  let date = new Date()
-  let day = date.getDate();
-  let month = date.getMonth() + 1;
-  let year = date.getFullYear();
-
-  let currentDate = `${year}-${month}-${day}`
-
-  if(currentDate > endDate){
-    res.statusCode = 400;
-    res.json({
-      message: "Past bookings can't be modified"
-    })
-    return;
-  }
-  let editBooking = await Booking.findOne({  where:{  id: bookingId } });
-  let spotId = editBooking.spotId
-
-  if(!editBooking){
-    res.statusCode = 404;
-    res.json({
-      message: "Booking couldn't be found"
-    })
-    return;
-  }
-
-  if(editBooking.userId !== user.id){
-    res.statusCode = 403;
-    res.json({
-      message: "Cannot edit a booking that is not your own."
-    })
-    return;
-  }
-
-
-  let bookings = await Booking.findAll({  where:{  spotId } });
-
-  let responseMessage = {
-    message: "Sorry, this spot is already booked for the specified dates",
-    errors: {}
-  }
-
-  if(startDate > endDate){
-    res.statusCode = 403;
-    res.json({
-      message: "Bad Request",
-      errors: {
-        endDate: "endDate cannot be on or before startDate"
-      }
-    })
-    return;
-  }
-
-  let bookedDates = []
-
-  for(let i = 0; i < bookings.length; i++){
-    let booking = bookings[i];
-    let startDate = booking.startDate;
-    let endDate = booking.endDate;
-
-    let bookedDate = [startDate, endDate];
-    bookedDates.push(bookedDate)
-  }
-  for(let i = 0; i < bookedDates.length; i++) {
-    let bookedDate = bookedDates[i];
-
-
-   if((startDate <= bookedDate[0]) && !(endDate < bookedDate[1])){
-    responseMessage.errors.endDate = "End date conflicts with an existing booking"
-   }
-   if((startDate >= bookedDate[0]) && !(startDate > bookedDate[1])){
-    responseMessage.errors.startDate = "Start date conflicts with an existing booking"
-   }
-   if((startDate > bookedDate[0]) && (endDate < bookedDate[1])){
-    responseMessage.errors.endDate = "End date conflicts with an existing booking"
-   }
-
-
-  }
- let size = Object.keys(responseMessage.errors)
-  if(size.length > 0){
-    res.statusCode = 403;
-    res.json(responseMessage)
-  } else{
-    return next();
-  }
-}
-
-module.exports = { bookingAuth, editBookingValid, setTokenCookie, restoreUser, requireAuth, spotOwner, spotImageOwner, spotReviewAuth, reviewAuth, reviewImageAuth, bookingDateValid };
+module.exports = { currentUser, spotExists, spotAuth, setTokenCookie, restoreUser, requireAuth, spotImageOwner, spotReviewAuth, reviewAuth, reviewImageAuth, bookingDateValid };
