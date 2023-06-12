@@ -221,9 +221,52 @@ const reviewImageAuth = async function(req, res, next) {
   }
 }
 
+const bookingAuth = async function(req, res, next){
+  const { bookingId } = req.params;
+  const { user } = req;
+  let booking = await Booking.findOne({ where: {id: bookingId}})
+
+  if(!booking){
+    res.statusCode = 404;
+    res.json({
+      message: "Spot couldn't be found"
+    })
+    return;
+  }
+  let spotId = booking.spotId
+  let spot = await Spot.findByPk(spotId)
+  if(booking.userId !== user.id && spot.ownerId !== user.id){
+    res.statusCode = 403;
+    res.json({
+      message: "Cannot delete a booking that is not your own."
+    })
+    return;
+  }
+
+  let date = new Date()
+  let day = date.getDate();
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
+
+  let currentDate = new Date(`${year}-${month}-${day}`)
+  let bookingStartDate = new Date(booking.dataValues.startDate)
+  console.log(bookingStartDate)
+  console.log(date)
+
+  if(date > bookingStartDate){
+    res.statusCode = 403
+    res.json({
+      message: "Bookings that have been started can't be deleted"
+    })
+    return;
+  }
+  return next();
+}
+
 const bookingDateValid = async function(req, res, next) {
   let { spotId } = req.params
   let { startDate, endDate } = req.body;
+  let { user } = req;
   let bookings = await Booking.findAll({  where:{  spotId  } });
 
   let bookedDates = []
@@ -231,6 +274,31 @@ const bookingDateValid = async function(req, res, next) {
   let responseMessage = {
     message: "Sorry, this spot is already booked for the specified dates",
     errors: {}
+  }
+
+  let spot = await Spot.findByPk(spotId)
+  if(!spot){
+    res.statusCode = 404;
+    res.json({
+      message: "Spot couldn't be found"
+    })
+  }
+
+  if(spot.ownerId === user.id){
+    res.statusCode = 403;
+    res.json({
+      message: "Cannot create booking a spot you own."
+    })
+  }
+
+  if(startDate > endDate){
+    res.statusCode = 403;
+    res.json({
+      message: "Bad Request",
+      errors: {
+        endDate: "endDate cannot be on or before startDate"
+      }
+    })
   }
 
   for(let i = 0; i < bookings.length; i++){

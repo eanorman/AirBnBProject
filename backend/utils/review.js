@@ -15,6 +15,8 @@ async function getReviewUser(reviews){
             exclude: ['username']
           }
         });
+
+
         review.dataValues.User = user;
         return review;
       }))
@@ -49,8 +51,9 @@ async function getReviewSpotPreview(reviews){
                 preview: true
             }
         })
-
-        review.dataValues.Spot.dataValues.previewImage = preview.dataValues.url;
+        if(preview){
+            review.dataValues.Spot.dataValues.previewImage = preview.dataValues.url;
+        }
         return review
     }))
     return reviews;

@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     reviewId: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'Reviews',
+        model: 'Review',
         key: 'id'
       },
       onDelete: 'cascade'

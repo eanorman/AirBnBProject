@@ -36,6 +36,12 @@ router.get('/current', requireAuth, async (req, res, next) => {
             userId: user.id
         }
     })
+    if(!reviews){
+        res.statusCode = 404;
+        res.json({
+            message: 'You have no reviews.'
+        })
+    }
 
     await getReviewUser(reviews)
     await getReviewSpot(reviews);
@@ -65,8 +71,16 @@ router.post('/:reviewId/images', requireAuth, reviewAuth, async (req, res, next)
             reviewId,
             url: req.body.url
         })
+        const returnImage = await ReviewImage.findOne({
+            where: {
+                id: newImage.dataValues.id
+            },
+            attributes: {
+                exclude: ["reviewId", 'createdAt', 'updatedAt']
+              }
+        })
 
-        res.json(newImage)
+        res.json(returnImage)
     }
 });
 

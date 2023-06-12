@@ -1,4 +1,9 @@
 'use strict';
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -11,22 +16,11 @@ module.exports = {
       },
       userId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Users',
-          key: 'id'
-        },
-        onDelete: 'cascade',
-        hooks: true
+        allowNull: false
       },
       spotId: {
         type: Sequelize.INTEGER,
-        references: {
-          model: 'Spots',
-          key: 'id'
-        },
-        onDelete: 'cascade',
-        hooks: true
+        allowNull: false
       },
       review: {
         type: Sequelize.TEXT,
@@ -46,9 +40,10 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
-    });
+    }, options);
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Reviews');
+    options.tableName = "Reviews";
+    return queryInterface.dropTable(options);
   }
 };
