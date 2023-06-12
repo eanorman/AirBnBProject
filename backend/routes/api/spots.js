@@ -3,7 +3,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { spotsWithPreview,spotsWithAverage, numberOfReviews, addAvgStarRating, getSpotImages, getSpotOwner } = require('../../utils/spot')
 const { getReviewSpot, getReviewUser, getReviewImages } = require('../../utils/review')
-const { requireAuth, spotOwner, spotReviewAuth, bookingDateValid } = require('../../utils/auth');
+const { requireAuth, spotExists, spotAuth, spotReviewAuth, bookingDateValid } = require('../../utils/auth');
 const { Spot, SpotImage, Review, ReviewImage, User, Booking } = require('../../db/models');
 
 const router = express.Router();
@@ -236,7 +236,7 @@ router.post('/', validateSpot, requireAuth, async (req, res, next) => {
 })
 
 // add an image to a spot based on the spot's id
-router.post('/:spotId/images', requireAuth, spotOwner, async (req, res, next) => {
+router.post('/:spotId/images', requireAuth, spotExists, spotAuth, async (req, res, next) => {
 
   const { spotId } = req.params;
   const { url, preview } = req.body;
@@ -255,7 +255,7 @@ router.post('/:spotId/images', requireAuth, spotOwner, async (req, res, next) =>
 })
 
 // Edit a spot
-router.put('/:spotId', validateSpot, requireAuth, spotOwner, async (req, res, next) => {
+router.put('/:spotId', validateSpot, requireAuth, async (req, res, next) => {
  let { address, city, state, country, lat, lng, name, description, price } = req.body
   let { spotId } = req.params
 
@@ -278,7 +278,7 @@ router.put('/:spotId', validateSpot, requireAuth, spotOwner, async (req, res, ne
 })
 
 // Delete a spot
-router.delete('/:spotId', requireAuth, spotOwner, async (req, res, next) => {
+router.delete('/:spotId', requireAuth, async (req, res, next) => {
   let { spotId } = req.params;
 
  await Spot.destroy({
@@ -291,5 +291,8 @@ router.delete('/:spotId', requireAuth, spotOwner, async (req, res, next) => {
     message: "Successfully deleted"
   })
 })
+
+
+
 
 module.exports = router;
