@@ -47,7 +47,7 @@ router.put('/:bookingId', requireAuth, editBookingValid, async (req, res, next) 
         updatedAt: new Date()
     })
 
-    res.json(editedBooking)
+    return res.json(editedBooking)
 
 })
 
