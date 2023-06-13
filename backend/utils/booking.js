@@ -17,6 +17,18 @@ const bookingSpot = async function(bookings) {
     return bookings
 }
 
+const bookingSpotImagePreview = async function(booking){
+    let spotId = booking.spotId;
+    let preview = await SpotImage.findOne({
+        where: {
+            spotId,
+            preview: true
+        }
+    })
+    booking.dataValues.Spot.dataValues.previewImage = preview.dataValues.url;
+    return booking;
+}
+
 const bookingsSpotPreview = async function(bookings) {
     await Promise.all(bookings.map(async (booking)=> {
         let spotId = booking.spotId

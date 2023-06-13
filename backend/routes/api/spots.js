@@ -3,6 +3,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { spotsWithPreview,spotsWithAverage, numberOfReviews, addAvgStarRating, getSpotImages, getSpotOwner } = require('../../utils/spot')
 const { getReviewSpot, getReviewUser, getReviewImages } = require('../../utils/review')
+const { bookingsSpotPreview, bookingSpot } = require('../../utils/booking')
 const { requireAuth, spotExists, spotAuth, spotReviewAuth, bookingDateValid, reviewExists } = require('../../utils/auth');
 const { Spot, SpotImage, Review, ReviewImage, User, Booking } = require('../../db/models');
 const {validateQuery,spotFilter } = require('../../utils/spot-filter')
@@ -222,10 +223,10 @@ router.get('/:spotId/bookings', requireAuth, spotExists, async (req, res, next) 
           spotId
         },
         attributes:{
-          include: ['id', 'url'],
-          exclude: ['userId', 'createdAt', 'updatedAt']
+          exclude: ['id', 'userId', 'createdAt', 'updatedAt']
         }
       })
+
       res.json({
         Bookings: bookings}
         )
