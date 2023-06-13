@@ -40,8 +40,8 @@ async function spotsWithAverage(spots) {
 
       let ratingNumber = rating.dataValues.avgRating;
       if(ratingNumber){
-        ratingNumber = ratingNumber.toFixed(1)
-        spot.dataValues.avgRating = Number.parseFloat(ratingNumber)
+        roundedNumber = Math.round(ratingNumber * 10) / 10
+        spot.dataValues.avgRating = Number.parseFloat(roundedNumber)
       } else {
         spot.dataValues.avgRating = 0;
       }
