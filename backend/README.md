@@ -2,7 +2,7 @@
 
 ## Database Schema Design
 
-![image](https://github.com/eanorman/AirBnBProject/assets/119039211/93c49ad0-41f5-4150-9efa-ac8ca156c28d)
+![image](https://github.com/eanorman/AirBnBProject/blob/main/backend/AirBnB-project-schema.png?raw=true)
 
 
 ## API Documentation
