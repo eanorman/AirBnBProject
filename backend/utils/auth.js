@@ -363,9 +363,12 @@ const editBookingValid = async function (req, res, next) {
   let year = date.getFullYear();
 
   let currentDate = `${year}-${month}-${day}`
+  let currentBooking = await Booking.findByPk(bookingId);
 
-  if(currentDate > endDate){
-    res.statusCode = 400;
+  console.log(currentBooking.dataValues.endDate)
+
+  if(currentDate > currentBooking.dataValues.endDate){
+    res.statusCode = 403;
     res.json({
       message: "Past bookings can't be modified"
     })
