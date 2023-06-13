@@ -16,6 +16,8 @@ async function spotsWithPreview(spots) {
         } else{
           spot.dataValues.previewImage = ""
         }
+        spot.dataValues.lat = parseFloat(spot.dataValues.lat);
+        spot.dataValues.lng = parseFloat(spot.dataValues.lng);
         return spot;
       }))
 
