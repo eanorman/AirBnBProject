@@ -240,6 +240,7 @@ const spotReviewAuth = async function (req, res, next){
 
 //Checks that a booking exists
 const bookingExists = async function(req, res, next){
+
   const { bookingId } = req.params;
   let booking = await Booking.findOne({ where: {id: bookingId}})
   if(!booking){
@@ -247,7 +248,9 @@ const bookingExists = async function(req, res, next){
     err.title = "Booking couldn't be found";
     err.errors = { message: "Booking couldn't be found"};
     err.status = 404;
+    return next(err);
   }
+
   return next();
 }
 
@@ -323,7 +326,7 @@ const bookingDateValid = async function(req, res, next) {
   }
 
   if(startDate > endDate){
-    res.statusCode = 403;
+    res.statusCode = 400;
     res.json({
       message: "Bad Request",
       errors: {
