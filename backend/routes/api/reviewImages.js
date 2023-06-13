@@ -5,14 +5,14 @@ const { handleValidationErrors } = require('../../utils/validation');
 const  sequelize  = require('sequelize')
 const { getReviewSpot, getReviewUser, getReviewImages } = require('../../utils/review')
 
-const { setTokenCookie, requireAuth, spotOwner, reviewAuth, reviewImageAuth } = require('../../utils/auth');
+const { setTokenCookie, requireAuth, reviewImageExists, reviewAuth, reviewImageAuth } = require('../../utils/auth');
 const { User, Spot, Review, SpotImage, ReviewImage } = require('../../db/models');
 const { getSpotImages } = require('../../utils/spot');
 
 
 const router = express.Router();
 
-router.delete('/:imageId', requireAuth, reviewImageAuth, async (req, res, next) => {
+router.delete('/:imageId', requireAuth, reviewImageExists, reviewImageAuth, async (req, res, next) => {
     let { imageId } = req.params;
 
     await ReviewImage.destroy({

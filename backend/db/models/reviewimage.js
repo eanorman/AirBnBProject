@@ -22,10 +22,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       references: {
         model: 'Review',
-        key: 'id'
+        key: 'id',
+        onDelete: 'cascade',
+        hooks: true
       },
-      onDelete: 'cascade'
-
     },
     url: {
       type: DataTypes.STRING

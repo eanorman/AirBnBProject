@@ -3,7 +3,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { spotsWithPreview,spotsWithAverage, numberOfReviews, addAvgStarRating, getSpotImages, getSpotOwner } = require('../../utils/spot')
 const { getReviewSpot, getReviewUser, getReviewImages } = require('../../utils/review')
-const { requireAuth, spotExists, spotAuth, spotReviewAuth, bookingDateValid } = require('../../utils/auth');
+const { requireAuth, spotExists, spotAuth, spotReviewAuth, bookingDateValid, reviewExists } = require('../../utils/auth');
 const { Spot, SpotImage, Review, ReviewImage, User, Booking } = require('../../db/models');
 const {validateQuery,spotFilter } = require('../../utils/spot-filter')
 
@@ -18,32 +18,30 @@ const validateSpot = [
       .withMessage('Street address is required'),
     check('address')
       .isAlphanumeric('en-US', {  ignore: ' '  })
-      .withMessage('Must be a valid address'),
+      .withMessage('Street address is required'),
     check('city')
       .exists({ checkFalsy: true })
       .withMessage('City is required'),
     check('city')
       .isAlpha('en-US', {  ignore: ' '  })
-      .withMessage('Must be a valid city'),
+      .withMessage('City is required'),
     check('state')
       .exists({ checkFalsy: true })
       .withMessage('State is required'),
     check('state')
       .isAlpha('en-US', {  ignore: ' '  })
-      .withMessage('Must be a valid state'),
+      .withMessage('State is required'),
     check('country')
       .exists({ checkFalsy: true })
       .withMessage('Country is required'),
     check('country')
       .isAlpha('en-US', {  ignore: ' '  })
-      .withMessage('Must be a valid country'),
+      .withMessage('Country is required'),
     check('lat')
-      .exists({ checkFalsy: true })
-      .isDecimal({ decimal_digits: '1,7' })
+      .isDecimal({ decimal_digits: '0,15' })
       .withMessage('Latitude is not valid'),
     check('lng')
-      .exists({ checkFalsy: true })
-      .isDecimal({ decimal_digits: '1,7' })
+      .isDecimal({ decimal_digits: '0,15' })
       .withMessage('Longitude is not valid'),
     check('name')
       .exists({ checkFalsy: true })
@@ -165,13 +163,10 @@ router.get('/current', requireAuth, async (req, res, next) => {
 })
 
 // Get reviews by spotId
-router.get('/:spotId/reviews', requireAuth, async (req, res, next) => {
+router.get('/:spotId/reviews', spotExists, async (req, res, next) => {
   let { spotId } = req.params;
   let spot = await Spot.findByPk(spotId)
-  if(!spot){
-    res.statusCode = 404;
-    res.json({message: "Spot couldn't be found"})
-  }
+
   let reviews = await Review.findAll({
     where: {
       spotId
@@ -184,15 +179,10 @@ router.get('/:spotId/reviews', requireAuth, async (req, res, next) => {
 })
 
 // Create a review by spotId
-router.post('/:spotId/reviews', validateReview, requireAuth, spotReviewAuth, async (req, res, next) => {
+router.post('/:spotId/reviews', validateReview, requireAuth, spotReviewAuth, spotExists, async (req, res, next) => {
   const { review, stars } = req.body
   const { user } = req;
   const { spotId } = req.params
-  let spot = await Spot.findByPk(spotId);
-  if(!spot){
-    res.statusCode = 404;
-    res.json("Spot couldn't be found")
-  }
 
    let spotReview = await Review.create({
       userId: user.id,
@@ -201,23 +191,18 @@ router.post('/:spotId/reviews', validateReview, requireAuth, spotReviewAuth, asy
       stars
    })
 
-
+   res.statusCode = 201;
    res.json(spotReview);
 })
 
 // Get bookings by spotId
-router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
+router.get('/:spotId/bookings', requireAuth, spotExists, async (req, res, next) => {
   const { user } = req;
   const { spotId } = req.params;
 
   const spot = await Spot.findByPk(spotId);
 
-  if(!spot){
-    res.statusCode = 404;
-    res.json({
-      message: "Spot couldn't be found"
-    })
-  } else {
+
     if(spot.ownerId === user.id){
       const bookings = await Booking.findAll({
         where: {
@@ -246,7 +231,7 @@ router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
         )
     }
 
-  }
+
 
 })
 
@@ -267,7 +252,7 @@ router.post('/:spotId/bookings', requireAuth, bookingDateValid, async (req, res,
 
 
 // Get a spot by spotId
-router.get('/:spotId', async (req, res, next) => {
+router.get('/:spotId', spotExists, async (req, res, next) => {
   let { spotId } = req.params;
 
   let spot = await Spot.findOne({
@@ -276,12 +261,6 @@ router.get('/:spotId', async (req, res, next) => {
     }
   })
 
-  if(!spot){
-    res.statusCode = 404;
-    res.json({
-      message: "Spot couldn't be found"
-    })
-  }
 
   await numberOfReviews(spot)
   await addAvgStarRating(spot)
@@ -308,8 +287,8 @@ router.post('/', validateSpot, requireAuth, async (req, res, next) => {
         description,
         price
      })
-
-     res.json(spot);
+     res.statusCode = 201;
+     res.json(spot)
 })
 
 // add an image to a spot based on the spot's id
@@ -332,7 +311,7 @@ router.post('/:spotId/images', requireAuth, spotExists, spotAuth, async (req, re
 })
 
 // Edit a spot
-router.put('/:spotId', validateSpot, requireAuth, async (req, res, next) => {
+router.put('/:spotId', validateSpot, requireAuth, spotExists, spotAuth, async (req, res, next) => {
  let { address, city, state, country, lat, lng, name, description, price } = req.body
   let { spotId } = req.params
 
@@ -355,7 +334,7 @@ router.put('/:spotId', validateSpot, requireAuth, async (req, res, next) => {
 })
 
 // Delete a spot
-router.delete('/:spotId', requireAuth, async (req, res, next) => {
+router.delete('/:spotId', requireAuth, spotExists, spotAuth, async (req, res, next) => {
   let { spotId } = req.params;
 
  await Spot.destroy({

@@ -5,7 +5,7 @@ const { handleValidationErrors } = require('../../utils/validation');
 const  sequelize  = require('sequelize')
 const { getReviewSpot, getReviewUser, getReviewImages } = require('../../utils/review')
 
-const { setTokenCookie, requireAuth, spotOwner, reviewAuth } = require('../../utils/auth');
+const { setTokenCookie, requireAuth, reviewAuth, reviewExists } = require('../../utils/auth');
 const { User, Spot, Review, SpotImage, ReviewImage } = require('../../db/models');
 const { getSpotImages } = require('../../utils/spot');
 
@@ -52,7 +52,8 @@ router.get('/current', requireAuth, async (req, res, next) => {
     })
 });
 
-router.post('/:reviewId/images', requireAuth, reviewAuth, async (req, res, next) => {
+// Add an image to a review based on reviewId
+router.post('/:reviewId/images', requireAuth, reviewExists, reviewAuth, async (req, res, next) => {
     const { reviewId } = req.params;
 
     const reviewImages = await ReviewImage.findAll({
@@ -84,7 +85,7 @@ router.post('/:reviewId/images', requireAuth, reviewAuth, async (req, res, next)
     }
 });
 
-router.put('/:reviewId', requireAuth, reviewAuth, validateReview, async (req, res, next) => {
+router.put('/:reviewId', requireAuth, reviewExists, reviewAuth, validateReview, async (req, res, next) => {
     const { review, stars } = req.body;
     const { reviewId } = req.params;
     const { user } = req;
@@ -98,7 +99,7 @@ router.put('/:reviewId', requireAuth, reviewAuth, validateReview, async (req, re
     res.json(updateReview)
 })
 
-router.delete('/:reviewId', requireAuth, reviewAuth, async (req, res, next) => {
+router.delete('/:reviewId', requireAuth, reviewExists, reviewAuth, async (req, res, next) => {
     let { reviewId } = req.params;
 
     await Review.destroy({

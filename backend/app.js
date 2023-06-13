@@ -64,25 +64,41 @@ app.use((err, _req, _res, next) => {
   next(err);
 });
 
-// Error formatter
-// app.use((err, _req, res, _next) => {
-//   res.status(err.status || 500);
-//   // console.error(err);
-//   res.json({
-//     title: err.title || 'Server Error',
-//     message: err.message,
-//     errors: err.errors,
-//     // stack: isProduction ? null : err.stack
-//   });
-// });
+app.use((err, req, res, next) => {
+  if (err instanceof ValidationError) {
+    if(err.errors.username){
+      if(err.errors.username === 'username must be unique'){
+        err.errors.username = "User with that username already exists"
+        err.message = "User already exists"
+      }
+    }
+  }
+  next(err);
+})
 
 app.use((err, req, res, next) => {
-  let returnMessage = err.errors
-  if(err.status === 400){
-    returnMessage = {message: "Bad Request", errors: err.errors}
+  if (err instanceof ValidationError) {
+    if(err.errors.email){
+      if(err.errors.email === 'email must be unique'){
+        err.errors.email = "User with that email already exists"
+        err.message = "User already exists"
+      }
+    }
   }
-  res.statusCode = err.status
-  return res.json(returnMessage);
+  next(err);
 })
+
+
+// Error formatter
+app.use((err, _req, res, _next) => {
+  res.status(err.status || 500);
+  res.json({
+    title: err.title || 'Server Error',
+    message: err.message,
+    errors: err.errors,
+    stack: isProduction ? null : err.stack
+  });
+});
+
 
 module.exports = app;

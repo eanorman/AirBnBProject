@@ -11,7 +11,11 @@ async function spotsWithPreview(spots) {
             preview: true
           }
         });
-        spot.dataValues.previewImage = preview.dataValues.url
+        if(preview){
+          spot.dataValues.previewImage = preview.dataValues.url
+        } else{
+          spot.dataValues.previewImage = ""
+        }
         return spot;
       }))
 
@@ -35,7 +39,12 @@ async function spotsWithAverage(spots) {
       });
 
       let ratingNumber = rating.dataValues.avgRating;
-      spot.dataValues.avgRating = Number.parseFloat(ratingNumber).toFixed(1)
+      if(ratingNumber){
+        ratingNumber = ratingNumber.toFixed(1)
+        spot.dataValues.avgRating = Number.parseFloat(ratingNumber)
+      } else {
+        spot.dataValues.avgRating = 0;
+      }
       return spot;
     })
   );

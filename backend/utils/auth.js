@@ -108,9 +108,68 @@ const currentUser = async function (req, res, next) {
   else return res.json({ user: null });
 }
 
+// Checks that review exists
+const reviewExists = async function(req, res, next) {
+  let { reviewId } = req.params;
+  let review = await Review.findByPk(reviewId);
+
+  if(!review){
+    const err = new Error("Review couldn't be found");
+    err.title = "Review couldn't be found";
+    err.errors = { message: "Review couldn't be found"};
+    err.status = 404;
+    return next(err);
+  } else return next();
+}
+
+// Checks that the user owns the review
+const reviewAuth = async function(req, res, next){
+  let { reviewId } = req.params;
+  let { user } = req;
+
+  let review = await Review.findByPk(reviewId);
+      if(review.userId !== user.id){
+        const err = new Error('Authentication required');
+        err.title = 'Authentication required';
+        err.errors = { message: 'Authentication required' };
+        err.status = 401;
+        return next(err);
+      } else return next();
+
+}
+
+const reviewImageExists = async function(req, res, next){
+  let { user } = req;
+  let { imageId } = req.params;
+
+  let reviewImage = await ReviewImage.findByPk(imageId);
+  if(!reviewImage){
+    res.statusCode = 404;
+    res.json({
+      message: "Review Image couldn't be found"
+    })
+  } else return next();
+}
 
 
+const reviewImageAuth = async function(req, res, next) {
+  let { user } = req;
+  let { imageId } = req.params;
 
+  let reviewImage = await ReviewImage.findByPk(imageId);
+  let review = await Review.findByPk(reviewImage.reviewId);
+  console.log(reviewImage.reviewId);
+    if(review.userId !== user.id){
+      const err = new Error('Authentication required');
+      err.title = 'Authentication required';
+      err.errors = { message: 'Authentication required' };
+      err.status = 401;
+      return next(err);
+    } else {
+      return next();
+    }
+
+}
 
 
 
@@ -162,7 +221,7 @@ const spotReviewAuth = async function (req, res, next){
     let spotReviews = await spot.getReviews();
     spotReviews.forEach((review) =>{
       if(review.dataValues.userId === user.id){
-        res.statusCode = 403;
+        res.statusCode = 500;
         res.json({
           message: "User already has a review for this spot"
         })
@@ -172,54 +231,10 @@ const spotReviewAuth = async function (req, res, next){
   }
 }
 
-const reviewAuth = async function(req, res, next){
-  let { reviewId } = req.params;
-  let { user } = req;
 
-  let review = await Review.findByPk(reviewId);
 
-  if(!review){
-    res.statusCode = 404;
-    res.json({
-      message: "Review couldn't be found"
-    })
-  } else {
-      if(review.userId !== user.id){
-        const err = new Error('Authentication required');
-        err.title = 'Authentication required';
-        err.errors = { message: 'Authentication required' };
-        err.status = 401;
-        return next(err);
-      } else{
-        return next();
-      }
-  }
-}
 
-const reviewImageAuth = async function(req, res, next) {
-  let { user } = req;
-  let { imageId } = req.params;
 
-  let reviewImage = await ReviewImage.findByPk(imageId);
-
-  if(!reviewImage){
-    res.statusCode = 404;
-    res.json({
-      message: "Review Image couldn't be found"
-    })
-  } else {
-    let review = await Review.findByPk(reviewImage.reviewId);
-    if(review.userId !== user.id){
-      const err = new Error('Authentication required');
-      err.title = 'Authentication required';
-      err.errors = { message: 'Authentication required' };
-      err.status = 401;
-      return next(err);
-    } else {
-      return next();
-    }
-  }
-}
 
 const bookingAuth = async function(req, res, next){
   const { bookingId } = req.params;
@@ -429,4 +444,4 @@ const editBookingValid = async function (req, res, next) {
   }
 }
 
-module.exports = { currentUser, spotExists, spotAuth, setTokenCookie, restoreUser, requireAuth, spotImageOwner, spotReviewAuth, reviewAuth, reviewImageAuth, bookingDateValid, bookingAuth, editBookingValid, };
+module.exports = { reviewImageExists, reviewExists, currentUser, spotExists, spotAuth, setTokenCookie, restoreUser, requireAuth, spotImageOwner, spotReviewAuth, reviewAuth, reviewImageAuth, bookingDateValid, bookingAuth, editBookingValid, };

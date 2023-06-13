@@ -32,19 +32,20 @@ module.exports = (sequelize, DataTypes) => {
   Review.init({
     userId: {
       type: DataTypes.INTEGER,
+      onDelete: 'CASCADE',
       references: {
         model: 'User',
-        key: 'id'
+        key: 'id',
+        onDelete: 'cascade'
       },
-      onDelete: 'cascade'
     },
     spotId: {
       type: DataTypes.INTEGER,
       references: {
         model: 'Spot',
-        key: 'id'
+        key: 'id',
+        onDelete: 'cascade'
       },
-      onDelete: 'cascade'
     },
     review: {
       type: DataTypes.TEXT,
