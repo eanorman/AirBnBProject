@@ -129,41 +129,41 @@ const reviewAuth = async function(req, res, next){
 
   let review = await Review.findByPk(reviewId);
       if(review.userId !== user.id){
-        const err = new Error('Authentication required');
-        err.title = 'Authentication required';
-        err.errors = { message: 'Authentication required' };
-        err.status = 401;
+        const err = new Error("Forbidden");
+        err.title = "Forbidden";
+        err.errors = { message: "Forbidden"};
+        err.status = 403;
         return next(err);
       } else return next();
 
 }
-
+// Checks that a reviewImage exists
 const reviewImageExists = async function(req, res, next){
-  let { user } = req;
   let { imageId } = req.params;
 
   let reviewImage = await ReviewImage.findByPk(imageId);
-  if(!reviewImage){
-    res.statusCode = 404;
-    res.json({
-      message: "Review Image couldn't be found"
-    })
+  if (!reviewImage){
+    const err = new Error("Review Image couldn't be found");
+    err.title = "Review Image couldn't be found";
+    err.errors = { message: "Review Image couldn't be found"};
+    err.status = 404;
+    return next(err);
   } else return next();
 }
 
-
+// Checks that a user owns the review
 const reviewImageAuth = async function(req, res, next) {
   let { user } = req;
   let { imageId } = req.params;
 
   let reviewImage = await ReviewImage.findByPk(imageId);
   let review = await Review.findByPk(reviewImage.reviewId);
-  console.log(reviewImage.reviewId);
+
     if(review.userId !== user.id){
-      const err = new Error('Authentication required');
-      err.title = 'Authentication required';
-      err.errors = { message: 'Authentication required' };
-      err.status = 401;
+      const err = new Error("Forbidden");
+      err.title = "Forbidden";
+      err.errors = { message: "Forbidden"};
+      err.status = 403;
       return next(err);
     } else {
       return next();
@@ -171,10 +171,28 @@ const reviewImageAuth = async function(req, res, next) {
 
 }
 
+//Checks that a spotImage exists
+const spotImageExists = async function(req, res, next){
+  const { imageId } = req.params;
+
+  let spotImage = await SpotImage.findOne({
+    where: {
+      id: imageId
+    }
+  });
+
+  if(!spotImage){
+    const err = new Error("Spot Image couldn't be found");
+    err.title = "Spot Image couldn't be found";
+    err.errors = { message: "Spot Image couldn't be found"};
+    err.status = 404;
+  }
+}
 
 
 
 
+//Checks that a user owns a spotImage
 const spotImageOwner = async function(req, res, next) {
   const { user } = req;
   const { imageId } = req.params;
@@ -185,79 +203,57 @@ const spotImageOwner = async function(req, res, next) {
     }
   });
 
-
-
-  if(!spotImage){
-    res.statusCode = 404;
-    res.json({
-      message: "Spot Image couldn't be found"
-    })
-  } else {
     let spotId = spotImage.dataValues.spotId
     let spot = await Spot.findByPk(spotId)
     if(spot.ownerId !== user.id){
-       const err = new Error('Authentication required');
-       err.title = 'Authentication required';
-       err.errors = { message: 'Authentication required' };
-       err.status = 401;
-       return next(err);
+      const err = new Error("Forbidden");
+      err.title = "Forbidden";
+      err.errors = { message: "Forbidden"};
+      err.status = 403;
+      return next(err);
      }
 
      return next();
-
-   }
 }
 
+//Checks if a user already has a review for a spot
 const spotReviewAuth = async function (req, res, next){
   const { user } = req;
   const { spotId } = req.params
   let spot = await Spot.findByPk(spotId);
-  if(!spot){
-    res.statusCode = 404;
-    res.json({
-      message: "Spot couldn't be found"
-    })
-  } else {
-    let spotReviews = await spot.getReviews();
+  let spotReviews = await spot.getReviews();
+
     spotReviews.forEach((review) =>{
       if(review.dataValues.userId === user.id){
-        res.statusCode = 500;
-        res.json({
-          message: "User already has a review for this spot"
-        })
+        const err = new Error("User already has a review for this spot");
+        err.title = "User already has a review for this spot";
+        err.errors = { message: "User already has a review for this spot"};
+        err.status = 500;
+        return next(err);
       }
     })
+
     return next();
+
+}
+
+//Checks that a booking exists
+const bookingExists = async function(req, res, next){
+  const { bookingId } = req.params;
+  let booking = await Booking.findOne({ where: {id: bookingId}})
+  if(!booking){
+    const err = new Error("Booking couldn't be found");
+    err.title = "Booking couldn't be found";
+    err.errors = { message: "Booking couldn't be found"};
+    err.status = 404;
   }
 }
 
-
-
-
-
-
-const bookingAuth = async function(req, res, next){
+// Checks that the current booking hasn't been started
+const bookingDateCurrent = async function(req, res, next){
   const { bookingId } = req.params;
   const { user } = req;
   let booking = await Booking.findOne({ where: {id: bookingId}})
-
-  if(!booking){
-    res.statusCode = 404;
-    res.json({
-      message: "Spot couldn't be found"
-    })
-    return;
-  }
-  let spotId = booking.spotId
-  let spot = await Spot.findByPk(spotId)
-  if(booking.userId !== user.id && spot.ownerId !== user.id){
-    res.statusCode = 403;
-    res.json({
-      message: "Cannot delete a booking that is not your own."
-    })
-    return;
-  }
-
   let date = new Date()
   let day = date.getDate();
   let month = date.getMonth() + 1;
@@ -265,18 +261,40 @@ const bookingAuth = async function(req, res, next){
 
   let currentDate = new Date(`${year}-${month}-${day}`)
   let bookingStartDate = new Date(booking.dataValues.startDate)
-  console.log(bookingStartDate)
-  console.log(date)
+
 
   if(date > bookingStartDate){
-    res.statusCode = 403
-    res.json({
-      message: "Bookings that have been started can't be deleted"
-    })
-    return;
+    const err = new Error("Bookings that have been started can't be deleted");
+    err.title = "Bookings that have been started can't be deleted";
+    err.errors = { message: "Bookings that have been started can't be deleted"};
+    err.status = 403;
+    return next(err);
+  } else return next();
+}
+
+
+
+
+// Checks that the user owns the booking or if they own the spot
+const bookingAuth = async function(req, res, next){
+  const { bookingId } = req.params;
+  const { user } = req;
+  let booking = await Booking.findOne({ where: {id: bookingId}})
+
+  let spotId = booking.spotId
+  let spot = await Spot.findByPk(spotId)
+  if(booking.userId !== user.id && spot.ownerId !== user.id){
+    const err = new Error("Cannot delete a booking that is not your own.");
+    err.title = "Cannot delete a booking that is not your own.";
+    err.errors = { message: "Cannot delete a booking that is not your own."};
+    err.status = 403;
+    return next(err);
+
   }
+
   return next();
 }
+
 
 const bookingDateValid = async function(req, res, next) {
   let { spotId } = req.params
@@ -292,18 +310,14 @@ const bookingDateValid = async function(req, res, next) {
   }
 
   let spot = await Spot.findByPk(spotId)
-  if(!spot){
-    res.statusCode = 404;
-    res.json({
-      message: "Spot couldn't be found"
-    })
-  }
+
 
   if(spot.ownerId === user.id){
-    res.statusCode = 403;
-    res.json({
-      message: "Cannot create booking a spot you own."
-    })
+    const err = new Error("Cannot create booking a spot you own.");
+    err.title = "Cannot create booking a spot you own.";
+    err.errors = { message: "Cannot create booking a spot you own."};
+    err.status = 403;
+    return next(err);
   }
 
   if(startDate > endDate){
@@ -328,11 +342,11 @@ const bookingDateValid = async function(req, res, next) {
     let bookedDate = bookedDates[i];
 
 
+    if((startDate >= bookedDate[0]) && !(startDate > bookedDate[1])){
+     responseMessage.errors.startDate = "Start date conflicts with an existing booking"
+    }
    if((startDate <= bookedDate[0]) && !(endDate < bookedDate[1])){
     responseMessage.errors.endDate = "End date conflicts with an existing booking"
-   }
-   if((startDate >= bookedDate[0]) && !(startDate > bookedDate[1])){
-    responseMessage.errors.startDate = "Start date conflicts with an existing booking"
    }
    if((startDate > bookedDate[0]) && (endDate < bookedDate[1])){
     responseMessage.errors.endDate = "End date conflicts with an existing booking"
@@ -341,7 +355,6 @@ const bookingDateValid = async function(req, res, next) {
 
   }
  let size = Object.keys(responseMessage.errors)
- console.log(size)
   if(size.length > 0){
     res.statusCode = 403;
     res.json(responseMessage)
@@ -377,13 +390,6 @@ const editBookingValid = async function (req, res, next) {
   let editBooking = await Booking.findOne({  where:{  id: bookingId } });
   let spotId = editBooking.spotId
 
-  if(!editBooking){
-    res.statusCode = 404;
-    res.json({
-      message: "Booking couldn't be found"
-    })
-    return;
-  }
 
   if(editBooking.userId !== user.id){
     res.statusCode = 403;
@@ -447,4 +453,4 @@ const editBookingValid = async function (req, res, next) {
   }
 }
 
-module.exports = { reviewImageExists, reviewExists, currentUser, spotExists, spotAuth, setTokenCookie, restoreUser, requireAuth, spotImageOwner, spotReviewAuth, reviewAuth, reviewImageAuth, bookingDateValid, bookingAuth, editBookingValid, };
+module.exports = { bookingDateCurrent, bookingExists, spotImageExists, reviewImageExists, reviewExists, currentUser, spotExists, spotAuth, setTokenCookie, restoreUser, requireAuth, spotImageOwner, spotReviewAuth, reviewAuth, reviewImageAuth, bookingDateValid, bookingAuth, editBookingValid, };

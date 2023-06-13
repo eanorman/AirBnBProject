@@ -237,7 +237,7 @@ router.get('/:spotId/bookings', requireAuth, spotExists, async (req, res, next) 
 })
 
 // Create a booking
-router.post('/:spotId/bookings', requireAuth, bookingDateValid, async (req, res, next) => {
+router.post('/:spotId/bookings', requireAuth, bookingDateValid, spotExists, async (req, res, next) => {
   let { spotId } = req.params;
   const { startDate, endDate } = req.body;
   const { user } = req;
