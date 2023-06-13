@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { jwtConfig } = require('../config');
 const { User, Spot, SpotImage, Review, ReviewImage, Booking } = require('../db/models');
-const { response } = require('express');
 
 const { secret, expiresIn } = jwtConfig;
 
@@ -257,14 +256,8 @@ const bookingExists = async function(req, res, next){
 // Checks that the current booking hasn't been started
 const bookingDateCurrent = async function(req, res, next){
   const { bookingId } = req.params;
-  const { user } = req;
   let booking = await Booking.findOne({ where: {id: bookingId}})
   let date = new Date()
-  let day = date.getDate();
-  let month = date.getMonth() + 1;
-  let year = date.getFullYear();
-
-  let currentDate = new Date(`${year}-${month}-${day}`)
   let bookingStartDate = new Date(booking.dataValues.startDate)
 
 
@@ -276,16 +269,12 @@ const bookingDateCurrent = async function(req, res, next){
     return next(err);
   } else return next();
 }
+
+// Checks that the current booking hasn't been started
 const bookingDateCurrentEdit = async function(req, res, next){
   const { bookingId } = req.params;
-  const { user } = req;
   let booking = await Booking.findOne({ where: {id: bookingId}})
   let date = new Date()
-  let day = date.getDate();
-  let month = date.getMonth() + 1;
-  let year = date.getFullYear();
-
-  let currentDate = new Date(`${year}-${month}-${day}`)
   let bookingStartDate = new Date(booking.dataValues.startDate)
 
 
@@ -320,11 +309,48 @@ const bookingAuth = async function(req, res, next){
   return next();
 }
 
+// Checks that the current user does not own the spot
+const bookingUserAuth = async function(req, res, next){
+  let { spotId } = req.params;
+  let { user } = req
+  let spot = await Spot.findByPk(spotId)
+  if(spot.ownerId === user.id){
+    const err = new Error("Cannot create booking a spot you own.");
+    err.title = "Cannot create booking a spot you own.";
+    err.errors = { message: "Cannot create booking a spot you own."};
+    err.status = 403;
+    return next(err);
+  } else return next();
+}
 
+//Checks that the endDate is after the startDate
+const validBookingDate = async function(req, res, next){
+  let {startDate, endDate} = req.body;
+  if(startDate > endDate){
+    const err = new Error("endDate cannot be on or before startDate");
+    err.title = "endDate cannot be on or before startDate";
+    err.errors = { message: "endDate cannot be on or before startDate"};
+    err.status = 400;
+    return next(err);
+  } else return next();
+}
+
+//Checks that the endDate is after the startDate
+const validBookingEditDate = async function(req, res, next){
+  let {startDate, endDate} = req.body;
+  if(startDate > endDate){
+    const err = new Error("endDate cannot be on or before startDate");
+    err.title = "endDate cannot be on or before startDate";
+    err.errors = { message: "endDate cannot be on or before startDate"};
+    err.status = 400;
+    return next(err);
+  } else return next();
+}
+
+// Checks that a spot is not already booked on the days requested
 const bookingDateValid = async function(req, res, next) {
   let { spotId } = req.params
   let { startDate, endDate } = req.body;
-  let { user } = req;
   let bookings = await Booking.findAll({  where:{  spotId  } });
 
   let bookedDates = []
@@ -332,27 +358,6 @@ const bookingDateValid = async function(req, res, next) {
   let responseMessage = {
     message: "Sorry, this spot is already booked for the specified dates",
     errors: {}
-  }
-
-  let spot = await Spot.findByPk(spotId)
-
-
-  if(spot.ownerId === user.id){
-    const err = new Error("Cannot create booking a spot you own.");
-    err.title = "Cannot create booking a spot you own.";
-    err.errors = { message: "Cannot create booking a spot you own."};
-    err.status = 403;
-    return next(err);
-  }
-
-  if(startDate > endDate){
-    res.statusCode = 400;
-    res.json({
-      message: "Bad Request",
-      errors: {
-        endDate: "endDate cannot be on or before startDate"
-      }
-    })
   }
 
   for(let i = 0; i < bookings.length; i++){
@@ -390,41 +395,26 @@ const bookingDateValid = async function(req, res, next) {
 
 }
 
-const editBookingValid = async function (req, res, next) {
-  let { bookingId } = req.params
-  let { startDate, endDate } = req.body;
+// Checks that a user owns the booking before editing
+const editBookingUser = async function(req, res, next){
   let { user } = req;
+  let { bookingId } = req.params
+  let editBooking = await Booking.findOne({  where:{  id: bookingId } });
+  if(editBooking.userId !== user.id){
+    const err = new Error("Cannot edit a booking that is not your own.");
+    err.title = "Cannot edit a booking that is not your own.";
+    err.errors = { message: "Cannot edit a booking that is not your own."};
+    err.status = 403;
+    return next(err);
+  } else return next();
+}
 
-  let date = new Date()
-  let day = date.getDate();
-  let month = date.getMonth() + 1;
-  let year = date.getFullYear();
-
-  let currentDate = `${year}-${month}-${day}`
-  let currentBooking = await Booking.findByPk(bookingId);
-
-  console.log(currentBooking.dataValues.endDate)
-
-  if(currentDate > currentBooking.dataValues.endDate){
-    res.statusCode = 403;
-    res.json({
-      message: "Past bookings can't be modified"
-    })
-    return;
-  }
+// Checks that a spot is not already booked on the days requested
+const editBookingValid = async function (req, res, next) {
+  let {bookingId} = req.params
+  let { startDate, endDate } = req.body;
   let editBooking = await Booking.findOne({  where:{  id: bookingId } });
   let spotId = editBooking.spotId
-
-
-  if(editBooking.userId !== user.id){
-    res.statusCode = 403;
-    res.json({
-      message: "Cannot edit a booking that is not your own."
-    })
-    return;
-  }
-
-
   let bookings = await Booking.findAll({  where:{  spotId } });
 
   let responseMessage = {
@@ -432,16 +422,6 @@ const editBookingValid = async function (req, res, next) {
     errors: {}
   }
 
-  if(startDate > endDate){
-    res.statusCode = 403;
-    res.json({
-      message: "Bad Request",
-      errors: {
-        endDate: "endDate cannot be on or before startDate"
-      }
-    })
-    return;
-  }
 
   let bookedDates = []
 
@@ -478,4 +458,4 @@ const editBookingValid = async function (req, res, next) {
   }
 }
 
-module.exports = { bookingDateCurrentEdit, bookingDateCurrent, bookingExists, spotImageExists, reviewImageExists, reviewExists, currentUser, spotExists, spotAuth, setTokenCookie, restoreUser, requireAuth, spotImageOwner, spotReviewAuth, reviewAuth, reviewImageAuth, bookingDateValid, bookingAuth, editBookingValid, };
+module.exports = { editBookingUser, validBookingDate, validBookingEditDate, bookingUserAuth, bookingDateCurrentEdit, bookingDateCurrent, bookingExists, spotImageExists, reviewImageExists, reviewExists, currentUser, spotExists, spotAuth, setTokenCookie, restoreUser, requireAuth, spotImageOwner, spotReviewAuth, reviewAuth, reviewImageAuth, bookingDateValid, bookingAuth, editBookingValid, };

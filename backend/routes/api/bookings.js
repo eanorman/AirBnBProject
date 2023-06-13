@@ -1,19 +1,12 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
-const { check } = require('express-validator');
-const { handleValidationErrors } = require('../../utils/validation');
-const  sequelize  = require('sequelize')
 const { bookingSpot, bookingsSpotPreview } = require('../../utils/booking')
-
-const { bookingDateCurrentEdit, bookingDateCurrent, bookingExists, bookingAuth, editBookingValid, bookingDateValid, setTokenCookie, requireAuth, spotOwner, reviewAuth, reviewImageAuth } = require('../../utils/auth');
-const { User, Spot, Review, SpotImage, ReviewImage, Booking } = require('../../db/models');
-const { getSpotImages } = require('../../utils/spot');
-const req = require('express/lib/request');
+const { validBookingEditDate, bookingDateCurrentEdit, bookingDateCurrent, bookingExists, bookingAuth, editBookingValid, editBookingUser, requireAuth } = require('../../utils/auth');
+const { Booking } = require('../../db/models');
 
 
 const router = express.Router();
 
-router.get('/current', requireAuth, async (req, res, next) => {
+router.get('/current', requireAuth, async (req, res) => {
     const { user } = req;
     const bookings = await Booking.findAll({
         where: {
@@ -29,7 +22,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
 })
 
 // Edit a booking
-router.put('/:bookingId', requireAuth, bookingExists, bookingAuth, bookingDateCurrentEdit, editBookingValid, async (req, res, next) => {
+router.put('/:bookingId', requireAuth, bookingExists, bookingAuth, editBookingUser, validBookingEditDate, bookingDateCurrentEdit, editBookingValid, async (req, res) => {
     const { startDate, endDate } = req.body;
     const { user } = req;
     const { bookingId } = req.params
@@ -52,7 +45,7 @@ router.put('/:bookingId', requireAuth, bookingExists, bookingAuth, bookingDateCu
 })
 
 // Delete a booking
-router.delete('/:bookingId', requireAuth, bookingExists, bookingAuth, bookingDateCurrent, async(req, res, next) => {
+router.delete('/:bookingId', requireAuth, bookingExists, bookingAuth, bookingDateCurrent, async(req, res) => {
     let { bookingId } = req.params
 
     await Booking.destroy({

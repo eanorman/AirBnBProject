@@ -1,15 +1,3 @@
-const { User, Spot, Review, SpotImage } = require('../db/models');
-const  sequelize  = require('sequelize')
-const { Op } = require('sequelize')
-
-let filter = {
-    where: {
-
-    }
-}
-
-
-
 const validateQuery = async function(req, res, next){
     let {page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
@@ -54,33 +42,9 @@ return next ();
 
 }
 
-const spotFilter = async function (queryString){
-    let {page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = queryString;
-
-    if(minLat && maxLat){
-        minLat = parseInt(minLat)
-        maxLat = parseInt(maxLat)
-        filter.where.lat = {
-            [Op.gte]: minLat,
-            [Op.let]: maxLat
-        }
-    } else if(minLat){
-        minLat = parseInt(minLat)
-        filter.where.lat = { [Op.gte]: minLat }
-    } else if(maxLat){
-        maxLat = parseInt(maxLat)
-        filter.where.lat= { [Op.lte]: maxLat}
-    }
-
-    const spot = await Spot.findAll(filter)
-
-    console.log(spot)
-}
-
 
 
 
 module.exports = {
-    validateQuery,
-    spotFilter
+    validateQuery
 }

@@ -1,18 +1,12 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
-const { check } = require('express-validator');
-const { handleValidationErrors } = require('../../utils/validation');
-const  sequelize  = require('sequelize')
-const { getReviewSpot, getReviewUser, getReviewImages } = require('../../utils/review')
+const { requireAuth, reviewImageExists, reviewImageAuth } = require('../../utils/auth');
+const {ReviewImage } = require('../../db/models');
 
-const { setTokenCookie, requireAuth, reviewImageExists, reviewAuth, reviewImageAuth } = require('../../utils/auth');
-const { User, Spot, Review, SpotImage, ReviewImage } = require('../../db/models');
-const { getSpotImages } = require('../../utils/spot');
 
 
 const router = express.Router();
 
-router.delete('/:imageId', requireAuth, reviewImageExists, reviewImageAuth, async (req, res, next) => {
+router.delete('/:imageId', requireAuth, reviewImageExists, reviewImageAuth, async (req, res) => {
     let { imageId } = req.params;
 
     await ReviewImage.destroy({

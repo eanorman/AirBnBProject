@@ -1,4 +1,4 @@
-const { User, Spot, Review, SpotImage } = require('../db/models');
+const { User, Review, SpotImage } = require('../db/models');
 const  sequelize  = require('sequelize')
 
 // adds preview image url to a spot

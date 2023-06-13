@@ -1,13 +1,10 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
-const  sequelize  = require('sequelize')
 const { getReviewSpot, getReviewUser, getReviewImages } = require('../../utils/review')
+const { requireAuth, reviewAuth, reviewExists } = require('../../utils/auth');
+const { Review, ReviewImage } = require('../../db/models');
 
-const { setTokenCookie, requireAuth, reviewAuth, reviewExists } = require('../../utils/auth');
-const { User, Spot, Review, SpotImage, ReviewImage } = require('../../db/models');
-const { getSpotImages } = require('../../utils/spot');
 
 const router = express.Router();
 
@@ -28,7 +25,7 @@ const validateReview = [
   ];
 
 // Get all reviews from the current user
-router.get('/current', requireAuth, async (req, res, next) => {
+router.get('/current', requireAuth, async (req, res) => {
     let { user } = req;
 
     let reviews = await Review.findAll({
@@ -53,7 +50,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
 });
 
 // Add an image to a review based on reviewId
-router.post('/:reviewId/images', requireAuth, reviewExists, reviewAuth, async (req, res, next) => {
+router.post('/:reviewId/images', requireAuth, reviewExists, reviewAuth, async (req, res) => {
     const { reviewId } = req.params;
 
     const reviewImages = await ReviewImage.findAll({
@@ -85,21 +82,20 @@ router.post('/:reviewId/images', requireAuth, reviewExists, reviewAuth, async (r
     }
 });
 
-router.put('/:reviewId', requireAuth, reviewExists, reviewAuth, validateReview, async (req, res, next) => {
+router.put('/:reviewId', requireAuth, reviewExists, reviewAuth, validateReview, async (req, res) => {
     const { review, stars } = req.body;
     const { reviewId } = req.params;
-    const { user } = req;
-
     const updateReview = await Review.findByPk(reviewId)
 
     await updateReview.update({
         review,
         stars
     })
+
     res.json(updateReview)
 })
 
-router.delete('/:reviewId', requireAuth, reviewExists, reviewAuth, async (req, res, next) => {
+router.delete('/:reviewId', requireAuth, reviewExists, reviewAuth, async (req, res) => {
     let { reviewId } = req.params;
 
     await Review.destroy({
