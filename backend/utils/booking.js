@@ -1,6 +1,6 @@
 const {  Spot, SpotImage } = require('../db/models');
-const  sequelize  = require('sequelize');
 
+//Adds spot information to a booking
 const bookingSpot = async function(bookings) {
     await Promise.all(bookings.map(async (booking) => {
         let spotId = booking.spotId;
@@ -17,6 +17,7 @@ const bookingSpot = async function(bookings) {
     return bookings
 }
 
+// Adds a previewImage to a booking
 const bookingsSpotPreview = async function(bookings) {
     await Promise.all(bookings.map(async (booking)=> {
         let spotId = booking.spotId

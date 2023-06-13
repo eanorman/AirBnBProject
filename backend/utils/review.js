@@ -1,6 +1,6 @@
 const { User, Spot, SpotImage } = require('../db/models');
 
-
+//Adds user information to a review
 async function getReviewUser(reviews){
     await Promise.all(reviews.map(async (review) =>{
         let userId = review.userId
@@ -23,6 +23,7 @@ async function getReviewUser(reviews){
       return reviews;
 }
 
+//Adds spot information to a review
 async function getReviewSpot(reviews){
     await Promise.all(reviews.map(async (review) => {
         let spotId = review.spotId
@@ -43,6 +44,7 @@ async function getReviewSpot(reviews){
     return reviews;
 }
 
+//Adds a preview image to a spot
 async function getReviewSpotPreview(reviews){
     await Promise.all(reviews.map(async (review) => {
         let spotId = review.spotId
@@ -60,6 +62,7 @@ async function getReviewSpotPreview(reviews){
     return reviews;
 }
 
+//Adds an array of reviewImages to an array of reviews
 async function getReviewImages(reviews){
     await Promise.all(reviews.map(async (review) => {
         let reviewId = review.id;

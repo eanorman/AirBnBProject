@@ -1,3 +1,4 @@
+//Validates a query for get all spots
 const validateQuery = async function(req, res, next){
     let {page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
