@@ -186,7 +186,8 @@ const spotImageExists = async function(req, res, next){
     err.title = "Spot Image couldn't be found";
     err.errors = { message: "Spot Image couldn't be found"};
     err.status = 404;
-  }
+    return next(err);
+  } else return next();
 }
 
 
@@ -247,6 +248,7 @@ const bookingExists = async function(req, res, next){
     err.errors = { message: "Booking couldn't be found"};
     err.status = 404;
   }
+  return next();
 }
 
 // Checks that the current booking hasn't been started
