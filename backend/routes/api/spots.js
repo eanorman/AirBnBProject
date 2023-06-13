@@ -281,12 +281,14 @@ router.post('/', validateSpot, requireAuth, async (req, res, next) => {
         city,
         state,
         country,
-        lat: parseFloat(lat),
-        lng: parseFloat(lng),
+        lat,
+        lng,
         name,
         description,
         price
      })
+     spot.dataValues.lat = parseFloat(spot.dataValues.lat);
+     spot.dataValues.lng = parseFloat(spot.dataValues.lng);
      res.statusCode = 201;
      res.json(spot)
 })
