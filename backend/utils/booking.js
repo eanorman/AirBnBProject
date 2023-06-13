@@ -1,4 +1,4 @@
-const { User, Spot, Review, SpotImage } = require('../db/models');
+const {  Spot, SpotImage } = require('../db/models');
 const  sequelize  = require('sequelize');
 
 const bookingSpot = async function(bookings) {
@@ -15,18 +15,6 @@ const bookingSpot = async function(bookings) {
         return booking;
     }))
     return bookings
-}
-
-const bookingSpotImagePreview = async function(booking){
-    let spotId = booking.spotId;
-    let preview = await SpotImage.findOne({
-        where: {
-            spotId,
-            preview: true
-        }
-    })
-    booking.dataValues.Spot.dataValues.previewImage = preview.dataValues.url;
-    return booking;
 }
 
 const bookingsSpotPreview = async function(bookings) {

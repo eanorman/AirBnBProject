@@ -1,6 +1,5 @@
-const { User, Spot, Review, SpotImage } = require('../db/models');
-const  sequelize  = require('sequelize')
-const { spotsWithPreview } = require('./spot')
+const { User, Spot, SpotImage } = require('../db/models');
+
 
 async function getReviewUser(reviews){
     await Promise.all(reviews.map(async (review) =>{
