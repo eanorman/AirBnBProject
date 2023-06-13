@@ -82,6 +82,7 @@ router.post('/:reviewId/images', requireAuth, reviewExists, reviewAuth, async (r
     }
 });
 
+//Edit a review based on reviewId
 router.put('/:reviewId', requireAuth, reviewExists, reviewAuth, validateReview, async (req, res) => {
     const { review, stars } = req.body;
     const { reviewId } = req.params;
@@ -95,6 +96,7 @@ router.put('/:reviewId', requireAuth, reviewExists, reviewAuth, validateReview, 
     res.json(updateReview)
 })
 
+//Delete a review based on reviewId
 router.delete('/:reviewId', requireAuth, reviewExists, reviewAuth, async (req, res) => {
     let { reviewId } = req.params;
 

@@ -6,6 +6,7 @@ const { Booking } = require('../../db/models');
 
 const router = express.Router();
 
+// Get current user's bookings
 router.get('/current', requireAuth, async (req, res) => {
     const { user } = req;
     const bookings = await Booking.findAll({

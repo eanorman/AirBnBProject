@@ -5,6 +5,7 @@ const { SpotImage } = require('../../db/models');
 
 const router = express.Router();
 
+//Delete a spotImage by imageId
 router.delete('/:imageId', requireAuth, spotImageExists, spotImageOwner, async (req, res) => {
     const { imageId } = req.params;
 

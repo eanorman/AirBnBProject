@@ -254,12 +254,10 @@ router.get('/:spotId', spotExists, async (req, res) => {
     }
   })
 
-
   await numberOfReviews(spot)
   await addAvgStarRating(spot)
   await getSpotImages(spot)
   await getSpotOwner(spot)
-
 
   res.json(spot)
 })
