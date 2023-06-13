@@ -35,6 +35,8 @@ async function getReviewSpot(reviews){
                 exclude: ['updatedAt', 'createdAt', 'description']
             }
         })
+        spot.dataValues.lat = parseFloat(spot.dataValues.lat);
+        spot.dataValues.lng = parseFloat(spot.dataValues.lng);
         review.dataValues.Spot = spot;
     }))
 
