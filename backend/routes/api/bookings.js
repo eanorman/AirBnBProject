@@ -5,7 +5,7 @@ const { handleValidationErrors } = require('../../utils/validation');
 const  sequelize  = require('sequelize')
 const { bookingSpot, bookingsSpotPreview } = require('../../utils/booking')
 
-const { bookingDateCurrent, bookingExists, bookingAuth, editBookingValid, bookingDateValid, setTokenCookie, requireAuth, spotOwner, reviewAuth, reviewImageAuth } = require('../../utils/auth');
+const { bookingDateCurrentEdit, bookingDateCurrent, bookingExists, bookingAuth, editBookingValid, bookingDateValid, setTokenCookie, requireAuth, spotOwner, reviewAuth, reviewImageAuth } = require('../../utils/auth');
 const { User, Spot, Review, SpotImage, ReviewImage, Booking } = require('../../db/models');
 const { getSpotImages } = require('../../utils/spot');
 const req = require('express/lib/request');
@@ -29,7 +29,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
 })
 
 // Edit a booking
-router.put('/:bookingId', requireAuth, bookingExists, bookingAuth, bookingDateCurrent, editBookingValid, async (req, res, next) => {
+router.put('/:bookingId', requireAuth, bookingExists, bookingAuth, bookingDateCurrentEdit, editBookingValid, async (req, res, next) => {
     const { startDate, endDate } = req.body;
     const { user } = req;
     const { bookingId } = req.params

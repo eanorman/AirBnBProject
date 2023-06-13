@@ -276,7 +276,27 @@ const bookingDateCurrent = async function(req, res, next){
     return next(err);
   } else return next();
 }
+const bookingDateCurrentEdit = async function(req, res, next){
+  const { bookingId } = req.params;
+  const { user } = req;
+  let booking = await Booking.findOne({ where: {id: bookingId}})
+  let date = new Date()
+  let day = date.getDate();
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
 
+  let currentDate = new Date(`${year}-${month}-${day}`)
+  let bookingStartDate = new Date(booking.dataValues.startDate)
+
+
+  if(date > bookingStartDate){
+    const err = new Error("Past bookings can't be modified");
+    err.title = "Past bookings can't be modified";
+    err.errors = { message: "Past bookings can't be modified"};
+    err.status = 403;
+    return next(err);
+  } else return next();
+}
 
 
 
@@ -458,4 +478,4 @@ const editBookingValid = async function (req, res, next) {
   }
 }
 
-module.exports = { bookingDateCurrent, bookingExists, spotImageExists, reviewImageExists, reviewExists, currentUser, spotExists, spotAuth, setTokenCookie, restoreUser, requireAuth, spotImageOwner, spotReviewAuth, reviewAuth, reviewImageAuth, bookingDateValid, bookingAuth, editBookingValid, };
+module.exports = { bookingDateCurrentEdit, bookingDateCurrent, bookingExists, spotImageExists, reviewImageExists, reviewExists, currentUser, spotExists, spotAuth, setTokenCookie, restoreUser, requireAuth, spotImageOwner, spotReviewAuth, reviewAuth, reviewImageAuth, bookingDateValid, bookingAuth, editBookingValid, };
