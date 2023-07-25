@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import "./LoginForm.css";
 
-function LoginFormModal() {
+function LoginFormPage() {
   const dispatch = useDispatch();
   const sessionUser = useSelector((state) => state.session.user);
   const [credential, setCredential] = useState("");
@@ -53,4 +53,4 @@ function LoginFormModal() {
   );
 }
 
-export default LoginFormModal;
+export default LoginFormPage;
