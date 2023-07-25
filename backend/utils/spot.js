@@ -54,6 +54,7 @@ async function spotsWithAverage(spots) {
   return spots;
 }
 
+//Adds number of reviews to a spot
 async function numberOfReviews(spot) {
 
     let totalReviews = await Review.count({
@@ -67,6 +68,7 @@ async function numberOfReviews(spot) {
     return spot;
 }
 
+// Adds avgStarRating to a spot
 async function addAvgStarRating(spot){
   let rating = await Review.findAll({
     attributes: [
@@ -86,6 +88,7 @@ async function addAvgStarRating(spot){
   return spot;
 }
 
+//adds an array of spotImages to a spot
 async function getSpotImages(spot){
   let spotImages = await spot.getSpotImages();
 
@@ -110,6 +113,7 @@ async function getSpotImages(spot){
   return spot;
 }
 
+//Adds the owner's information to a spot
 async function getSpotOwner(spot){
   let ownerId = spot.ownerId;
 

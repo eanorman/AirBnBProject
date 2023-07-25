@@ -298,9 +298,9 @@ const bookingAuth = async function(req, res, next){
   let spotId = booking.spotId
   let spot = await Spot.findByPk(spotId)
   if(booking.userId !== user.id && spot.ownerId !== user.id){
-    const err = new Error("Cannot delete a booking that is not your own.");
-    err.title = "Cannot delete a booking that is not your own.";
-    err.errors = { message: "Cannot delete a booking that is not your own."};
+    const err = new Error("Forbidden");
+    err.title = "Forbidden";
+    err.errors = { message: "Forbidden"};
     err.status = 403;
     return next(err);
 
@@ -433,6 +433,7 @@ const editBookingValid = async function (req, res, next) {
     let bookedDate = [startDate, endDate];
     bookedDates.push(bookedDate)
   }
+
   for(let i = 0; i < bookedDates.length; i++) {
     let bookedDate = bookedDates[i];
 
