@@ -14,12 +14,12 @@ button {
 }
 
 .user-icon i {
-    font-size: 38px;
+    font-size: 35px;
+    margin-right: 15px;
 }
 
 * {
     font-family: 'Montserrat', sans-serif;
-
 }
 
 .profile-dropdown {

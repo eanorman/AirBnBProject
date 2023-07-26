@@ -20,15 +20,35 @@ function LoginFormModal() {
         const data = await res.json();
         if (data && data.errors) {
           setErrors(data.errors);
+          console.log(data.errors)
         }
       });
   };
+
+  const handleClick = (e) => {
+   e.preventDefault();
+    setErrors({});
+    return dispatch(sessionActions.login({ credential: 'demo@user.io', password: 'password' }))
+      .then(closeModal)
+      .catch(async (res) => {
+        const data = await res.json();
+        if (data && data.errors) {
+          setErrors(data.errors);
+          console.log(data.errors)
+        }
+      });
+    
+  }
 
   return (
     <div className="login-form-container">
       <h1>Log In</h1>
       <form onSubmit={handleSubmit} className="login-form">
         <label>
+          {errors ? (
+            <p className="error">{errors.message}</p>
+          ):
+          <p className="hidden"></p>}
           <input
             type="text"
             value={credential}
@@ -52,6 +72,7 @@ function LoginFormModal() {
         )}
         <button type="submit">Log In</button>
       </form>
+      <button type='button' className="demo-user" onClick={handleClick}>Demo User</button>
     </div>
   );
 }
