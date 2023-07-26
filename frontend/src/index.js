@@ -32,6 +32,7 @@ function Root() {
         <BrowserRouter>
           <App />
           <Modal />
+          
         </BrowserRouter>
       </Provider>
     </ModalProvider>
