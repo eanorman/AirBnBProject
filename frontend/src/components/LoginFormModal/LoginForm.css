@@ -1,0 +1,30 @@
+.login-form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 500px;
+    height: 300px;
+    border-radius: 25px;
+}
+
+.login-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 15px;
+
+}
+
+.login-form input {
+    background-color: #e6f2f2;
+    margin: 5px;
+}
+
+.login-form button {
+    margin: 20px;
+    width: 100%;
+    background-color: #FF5A5F;
+    color: white;
+}
