@@ -20,7 +20,6 @@ function LoginFormModal() {
         const data = await res.json();
         if (data && data.errors) {
           setErrors(data.errors);
-          console.log(data.errors)
         }
       });
   };
@@ -34,11 +33,12 @@ function LoginFormModal() {
         const data = await res.json();
         if (data && data.errors) {
           setErrors(data.errors);
-          console.log(data.errors)
         }
       });
     
   }
+  let disabled = false;
+  if(credential.length < 4 || password.length < 6) disabled = true;
 
   return (
     <div className="login-form-container">
@@ -70,7 +70,7 @@ function LoginFormModal() {
         {errors.credential && (
           <p>{errors.credential}</p>
         )}
-        <button type="submit">Log In</button>
+        <button type="submit" disabled={disabled}>Log In</button>
       </form>
       <button type='button' className="demo-user" onClick={handleClick}>Demo User</button>
     </div>

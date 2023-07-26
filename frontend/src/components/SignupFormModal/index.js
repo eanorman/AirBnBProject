@@ -41,6 +41,17 @@ function SignupFormModal() {
     });
   };
 
+  let disabled = false;
+  if(!email 
+    || !username 
+    || !firstName 
+    || !lastName 
+    || !password 
+    || !confirmPassword
+    || username.length < 4
+    || password.length < 6
+    || password !== confirmPassword) disabled = true;
+
   return (
     <div className="signup-form-container">
       <h1>Sign Up</h1>
@@ -54,7 +65,7 @@ function SignupFormModal() {
             required
           />
         </label>
-        {errors.email && <p>{errors.email}</p>}
+        {errors.email && <p className="error">{errors.email}</p>}
         <label>
           <input
             type="text"
@@ -64,7 +75,7 @@ function SignupFormModal() {
             required
           />
         </label>
-        {errors.username && <p>{errors.username}</p>}
+        {errors.username && <p className="error">{errors.username}</p>}
         <label>
           <input
             type="text"
@@ -74,7 +85,7 @@ function SignupFormModal() {
             required
           />
         </label>
-        {errors.firstName && <p>{errors.firstName}</p>}
+        {errors.firstName && <p className="error">{errors.firstName}</p>}
         <label>
           <input
             type="text"
@@ -84,7 +95,7 @@ function SignupFormModal() {
             required
           />
         </label>
-        {errors.lastName && <p>{errors.lastName}</p>}
+        {errors.lastName && <p className="error">{errors.lastName}</p>}
         <label>
           <input
             type="password"
@@ -94,7 +105,7 @@ function SignupFormModal() {
             required
           />
         </label>
-        {errors.password && <p>{errors.password}</p>}
+        {errors.password && <p className="error">{errors.password}</p>}
         <label>
           <input
             type="password"
@@ -105,9 +116,9 @@ function SignupFormModal() {
           />
         </label>
         {errors.confirmPassword && (
-          <p>{errors.confirmPassword}</p>
+          <p className="error">{errors.confirmPassword}</p>
         )}
-        <button type="submit">Sign Up</button>
+        <button type="submit" disabled={disabled}>Sign Up</button>
       </form>
     </div>
   );
