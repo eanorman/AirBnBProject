@@ -18,13 +18,48 @@ function SpotPage() {
   };
 
   const spot = useSelector(spotSelector);
+  const handleClick = () => {
+    alert('Feature coming soon...')
+  }
 
   if (isLoading) {
     return (
-      <div className="spot-page">
-        {spot.indSpot.SpotImages.map((image) => {
-        return <img src={image.url} key={image.id} alt='spot'/>;
-        })}
+      <div className="spot-page-container">
+        <div className="spot-page">
+          <h1>{spot.indSpot.name}</h1>
+          <h2>{spot.indSpot.city}, {spot.indSpot.state}, {spot.indSpot.country}</h2>
+          <ul className="photo-gallery">
+            {spot.indSpot.SpotImages.map((image, index) => {
+              return (
+                <i className={`photo-${index}`}>
+                  <img src={image.url} key={image.id} alt={`spot ${image.id}`} />
+                </i>
+              )
+            })}
+          </ul>
+          <div className="spot-container">
+            <div className="spot-description">
+              <h2>Hosted by {spot.indSpot.Owner.firstName} {spot.indSpot.Owner.lastName}</h2>
+              <p>{spot.indSpot.description}</p>
+            </div>
+            <div className="spot-reserve">
+              <div className="price-rating">
+              <p className="price">${spot.indSpot.price} night</p>
+              {spot.indSpot.avgStarRating > 0 ? (
+                <div>
+                  <p className="rating">★{spot.indSpot.avgStarRating} • {spot.indSpot.numReviews} Reviews</p>
+                </div>
+              ) : (
+                <p>★ New</p>
+              )}
+              </div>
+              <div className="reserve-button">
+              <button id='reserve' onClick={handleClick}>Reserve</button>
+
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

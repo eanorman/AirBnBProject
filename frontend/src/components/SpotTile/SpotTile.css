@@ -1,5 +1,5 @@
 .spot-tile {
-    flex: 0 1 24%;
+    flex: 0 0 24%;
     cursor: pointer;
     margin: 15px;
 
@@ -31,8 +31,8 @@
   }
 
 .spot-tile img {
-    height: 500px;
-    width: 500px;
+    width: 100%;
+    height: auto;
 }
 
 .spot-name {

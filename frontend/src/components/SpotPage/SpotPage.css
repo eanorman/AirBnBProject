@@ -1,4 +1,119 @@
-.spot-page img {
-    height: 500px;
-    width: 500px;
+.photo-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
 }
+
+.photo-0 {
+    flex-basis: 50%;
+}
+
+.photo-0 img {
+    width: 100%;
+    height: auto;
+}
+
+.photo-1 {
+    flex-basis: 25%;
+    width: 100%;
+    max-height: 225px;
+}
+ .photo-1 img {
+    height: auto;
+ }
+
+ .photo-2 {
+    flex-basis: 25%;
+    width: 100%;
+    max-height: 225px;
+ }
+
+ .photo-2 img {
+    height: auto;
+ }
+
+ .photo-3 {
+    flex-basis: 25%;
+    width: 100%;
+    max-height: 225px;
+ }
+
+ .photo-3 img {
+    height: auto;
+ }
+
+ .photo-4 {
+    flex-basis: 25%;
+    width: 100%;
+    max-height: 225px;
+ }
+
+ .photo-4 img {
+    height: auto;
+ }
+
+ h1 {
+    padding: 10px 0 20px 0;
+ }
+
+ h2 {
+    padding-bottom: 10px;
+ }
+
+ .spot-page {
+    max-width: 1000px;
+    margin-left: 50px;
+    margin-right: 50px;
+ }
+
+ .spot-page-container {
+    max-width: 1000px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+ }
+
+ .spot-container {
+    margin: 20px;
+    height: auto;
+    display: flex;
+    align-items: flex-start;
+ }
+
+ .spot-description {
+    width: 60%; 
+ }
+.rating p {
+    font-size: 12pt;
+}
+
+ .spot-reserve {
+    width: 40%;
+    border: 3px solid black;
+    border-radius: 25px;
+    padding: 5px 10px 15px 10px;
+}
+
+.price-rating {
+    display: flex;  
+    align-items: center;
+    justify-content: space-between;
+ }
+
+ .reserve-button {
+    display: flex;
+    justify-content: center;
+ }
+
+ .reserve-button button {
+    text-align: center;
+    margin: auto;
+    width: 75%;
+    background-color: #FF5A5F;
+    color: #FFFFFF;
+ }
+
+ .reserve-button button:hover {
+    background-color: #FFFFFF;
+    color: #FF5A5F;
+ }
