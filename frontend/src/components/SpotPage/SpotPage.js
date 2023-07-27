@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchIndSpot } from "../../store/spot/specSpotActions";
+import Reviews from "../Reviews/Reviews";
 import './SpotPage.css';
 
 function SpotPage() {
@@ -23,6 +24,7 @@ function SpotPage() {
   }
 
   if (isLoading) {
+    console.log(spot.indSpot)
     return (
       <div className="spot-page-container">
         <div className="spot-page">
@@ -31,7 +33,7 @@ function SpotPage() {
           <ul className="photo-gallery">
             {spot.indSpot.SpotImages.map((image, index) => {
               return (
-                <i className={`photo-${index}`}>
+                <i className={`photo-${index}`} key={image.id}>
                   <img src={image.url} key={image.id} alt={`spot ${image.id}`} />
                 </i>
               )
@@ -45,20 +47,28 @@ function SpotPage() {
             <div className="spot-reserve">
               <div className="price-rating">
               <p className="price">${spot.indSpot.price} night</p>
-              {spot.indSpot.avgStarRating > 0 ? (
+              {spot.indSpot.numReviews > 0 ? (
+                spot.indSpot.numReviews === 1 ? (
+                  <div>
+                    <p className="rating">★{spot.indSpot.avgStarRating} • {spot.indSpot.numReviews} Review</p>
+                    </div>
+                ) :(
                 <div>
                   <p className="rating">★{spot.indSpot.avgStarRating} • {spot.indSpot.numReviews} Reviews</p>
                 </div>
+                )
               ) : (
                 <p>★ New</p>
               )}
               </div>
               <div className="reserve-button">
               <button id='reserve' onClick={handleClick}>Reserve</button>
-
               </div>
             </div>
           </div>
+        <div className="review-container">
+              <Reviews spot={spot.indSpot}/>
+        </div>
         </div>
       </div>
     );

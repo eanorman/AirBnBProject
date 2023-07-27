@@ -42,8 +42,13 @@ async function spotsWithAverage(spots) {
 
       let ratingNumber = rating.dataValues.avgRating;
       if(ratingNumber){
-        roundedNumber = Math.round(ratingNumber * 10) / 10
-        spot.dataValues.avgRating = Number.parseFloat(roundedNumber)
+        roundedNumber = Math.round(ratingNumber * 10) / 10;
+        spot.dataValues.avgRating = roundedNumber.toFixed(1);
+        
+        // Check if the result has no decimal point and add ".0" if needed
+        if (spot.dataValues.avgRating.indexOf('.') === -1) {
+          spot.dataValues.avgRating += ".0";
+        }
       } else {
         spot.dataValues.avgRating = 0;
       }
@@ -83,8 +88,13 @@ async function addAvgStarRating(spot){
   });
 
   let ratingNumber = rating[0].dataValues.avgRating;
-  ratingNumber = Number.parseFloat(ratingNumber).toFixed(1)
-  spot.dataValues.avgStarRating = Number.parseFloat(ratingNumber)
+  roundedNumber = Math.round(ratingNumber * 10) / 10;
+  spot.dataValues.avgStarRating = roundedNumber.toFixed(1);
+  
+  // Check if the result has no decimal point and add ".0" if needed
+  if (spot.dataValues.avgStarRating.indexOf('.') === -1) {
+    spot.dataValues.avgStarRating += ".0";
+  }
   return spot;
 }
 

@@ -117,3 +117,7 @@
     background-color: #FFFFFF;
     color: #FF5A5F;
  }
+ 
+ .review-container {
+    display: block;
+ }
