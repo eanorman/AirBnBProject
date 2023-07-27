@@ -23,7 +23,7 @@ const initialState = {};
 const spotsReducer = (state = initialState, action) => {
     switch (action.type) {
         case FETCH_SPOTS_SUCCESS: {
-            const newState = {};
+            const newState = {...state};
             action.payload.Spots.forEach((spot) => newState[spot.id] = spot);
             return newState;
         }

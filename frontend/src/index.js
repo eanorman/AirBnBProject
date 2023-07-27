@@ -38,7 +38,7 @@ function Root() {
           <Route exact path='/'>
             <LandingPage />
           </Route>
-        <Route path='/spots/:id'>
+        <Route path='/spots/:spotId'>
           <SpotPage />
         </Route>
         </BrowserRouter>
