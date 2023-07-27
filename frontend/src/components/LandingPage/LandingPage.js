@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import {  useDispatch, useSelector } from 'react-redux';
 import { fetchSpots } from '../../store/spots/spotActions';
 import SpotTile from '../SpotTile/SpotTile';
+import './LandingPage.css'
 
 function LandingPage() {
     const dispatch = useDispatch();
@@ -18,10 +19,11 @@ function LandingPage() {
 
     return (
     <div>
-        <h2>Spots</h2>
+        <div className='spot-tile-list'>
         {spots?.map(( spot ) => {
-            return <SpotTile spot={spot} key={spot.id}/> 
+            return <SpotTile spot={spot} key={spot.id}/>
         })}
+        </div>
     </div>
     )
 }

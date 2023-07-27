@@ -1,0 +1,58 @@
+.spot-tile {
+    flex: 0 1 24%;
+    cursor: pointer;
+    margin: 15px;
+
+}
+
+.tooltip-text {
+    visibility: hidden;
+    position: absolute;
+    z-index: 2;
+    color: white;
+    background-color: #FF5A5F;
+    color: #FFFFFF;
+    border-end-end-radius : 25px;
+    padding: 15px;
+}
+
+.tooltip-text::before {
+    content: "";
+    position: absolute;
+    transform: rotate(45deg);
+    padding: 150px;
+    z-index: 1;
+    top: 500px;
+    left: -50%;
+  }
+
+  .spot-tile:hover .tooltip-text {
+    visibility: visible;
+  }
+
+.spot-tile img {
+    height: 500px;
+    width: 500px;
+}
+
+.spot-name {
+    display: inline;
+    float: left;
+}
+
+.rating {
+    display: inline;
+    float: right;
+}
+
+.price {
+    display: block;
+    padding: 25px;
+    padding-left: 0px;
+    font-weight: bold;
+}
+
+.container {
+    margin-left: 35px;
+    margin-right: 40px;
+}

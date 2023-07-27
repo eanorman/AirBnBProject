@@ -11,6 +11,9 @@ import App from "./App";
 import configureStore from "./store";
 import { restoreCSRF, csrfFetch } from "./store/csrf";
 import * as sessionActions from "./store/session";
+import { Route } from "react-router-dom";
+import LandingPage from "./components/LandingPage/LandingPage";
+import SpotPage from "./components/SpotPage/SpotPage";
 
 const store = configureStore();
 
@@ -32,7 +35,12 @@ function Root() {
         <BrowserRouter>
           <App />
           <Modal />
-          
+          <Route exact path='/'>
+            <LandingPage />
+          </Route>
+        <Route path='/spots/:id'>
+          <SpotPage />
+        </Route>
         </BrowserRouter>
       </Provider>
     </ModalProvider>
