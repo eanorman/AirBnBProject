@@ -1,22 +1,35 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import ProfileButton from './ProfileButton';
-import './Navigation.css';
-import logo from '../../Airbnb_logo.png'
+import React from "react";
+import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import ProfileButton from "./ProfileButton";
+import "./Navigation.css";
+import logo from "../../Airbnb_logo.png";
+import NewSpot from "../NewSpot/NewSpot";
 
-function Navigation({ isLoaded }){
-  const sessionUser = useSelector(state => state.session.user);
+function Navigation({ isLoaded }) {
+  const sessionUser = useSelector((state) => state.session.user);
 
   return (
-    <ul className='navbar'>
+    <ul className="navbar">
       <li>
-        <NavLink exact to="/"><img src={logo} alt='logo' /></NavLink>
+        <NavLink exact to="/">
+          <img src={logo} alt="logo" />
+        </NavLink>
       </li>
-      {isLoaded && (
+      {isLoaded && sessionUser ? (
+        <>
         <li>
-          <ProfileButton user={sessionUser} />
+          <NewSpot />
         </li>
+          <li>
+            <ProfileButton user={sessionUser} />
+          </li>
+          </>
+      ) : (
+          <li>
+            <ProfileButton user={sessionUser} />
+          </li>
+
       )}
     </ul>
   );

@@ -11,7 +11,17 @@ function SpotPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchIndSpot(spotId)).then(() => setIsLoading(true));
+    let isMounted = true;
+    dispatch(fetchIndSpot(spotId)).then(() => {
+      // Check if the component is still mounted before updating the state
+      if (isMounted) {
+        setIsLoading(true);
+      }
+    });
+    return () => {
+      // This function will run when the component unmounts (user navigates away from the page)
+      isMounted = false;
+    };
   }, [dispatch, spotId]);
 
   const spotSelector = (state) => {

@@ -1,0 +1,13 @@
+.new-spot-container {
+    position: absolute;
+    right: 150px;
+    top: 20px;
+    width: 150px;
+}
+
+.new-spot-container button {
+    width: 200px;
+    border: none;
+    background-color: #FFFFFF;
+    color: #00525E;
+}

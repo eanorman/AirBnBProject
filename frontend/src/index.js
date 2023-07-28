@@ -14,6 +14,8 @@ import * as sessionActions from "./store/session";
 import { Route } from "react-router-dom";
 import LandingPage from "./components/LandingPage/LandingPage";
 import SpotPage from "./components/SpotPage/SpotPage";
+import CreateSpot from "./components/CreateSpot/CreateSpot";
+import { Switch } from "react-router-dom/cjs/react-router-dom.min";
 
 const store = configureStore();
 
@@ -35,12 +37,17 @@ function Root() {
         <BrowserRouter>
           <App />
           <Modal />
-          <Route exact path='/'>
-            <LandingPage />
-          </Route>
-        <Route path='/spots/:spotId'>
-          <SpotPage />
-        </Route>
+          <Switch>
+            <Route exact path="/">
+              <LandingPage />
+            </Route>
+            <Route path="/spots/new">
+              <CreateSpot />
+            </Route>
+            <Route path="/spots/:spotId">
+              <SpotPage />
+            </Route>
+          </Switch>
         </BrowserRouter>
       </Provider>
     </ModalProvider>

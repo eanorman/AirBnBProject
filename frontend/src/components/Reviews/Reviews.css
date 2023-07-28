@@ -1,3 +1,24 @@
 .hidden {
     display: none;
 }
+
+.reviews-container button {
+    width: 175px;
+    box-shadow: 2px 2px 0 black;
+    margin-bottom: 10px;
+    border: none;
+    background-color: #CCCCCC;
+}
+
+.reviews-container button:hover {
+    background-color: #999999;
+}
+
+.reviews-container h2 {
+    font-size: 18pt;
+    font-weight: bold;
+}
+
+.reviews-container {
+    font-size: 14pt;
+}

@@ -1,13 +1,15 @@
 export const FETCH_IND_SPOT_SUCCESS = 'FETCH_IND_SPOT_SUCCESS';
 
 export const fetchIndSpot = (spotId) => async (dispatch) => {
-    const res = await fetch(`/api/spots/${spotId}`);
-    if(res.ok){
-        const data = await res.json();
-        dispatch(receiveIndSpot(data));
-        return data;
-    } else {
-        throw res;
+    if(spotId !== 'new'){
+        const res = await fetch(`/api/spots/${spotId}`);
+        if(res.ok){
+            const data = await res.json();
+            dispatch(receiveIndSpot(data));
+            return data;
+        } else {
+            throw res;
+        }
     }
 };
 
