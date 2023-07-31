@@ -4,13 +4,13 @@ import { useState } from "react";
 
 function CreateSpot(){
     const [country, setCountry] = useState('');
-    const [streetAddress, setStreetAddress] = useState('');
+    const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
-    const [latitude, setLatitude] = useState('');
-    const [longitude, setLongitude] = useState('');
+    const [lat, setLat] = useState('');
+    const [lng, setLng] = useState('');
     const [description, setDescription] = useState('');
-    const [title, setTitle] = useState('');
+    const [name, setName] = useState('');
     const [price, setPrice] = useState('');
     const [picOne, setPicOne] = useState('');
     const [picTwo, setPicTwo] = useState('');
@@ -21,7 +21,7 @@ function CreateSpot(){
 
     return (
         <div>
-            <h1>Create a new Spot</h1>
+            <h1>Create a New Spot</h1>
             <h2>Where's your place located?</h2>
             <p>Guests will only get your exact address once they booked a reservation</p>
             <form>
@@ -39,8 +39,8 @@ function CreateSpot(){
                     Street address
                     <input
                     type="text"
-                    value={streetAddress}
-                    onChange={(e) => setStreetAddress(e.target.value)}
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
                     placeholder="Address"
                     required
                     />
@@ -70,8 +70,8 @@ function CreateSpot(){
                     Latitude
                     <input
                     type="text"
-                    value={latitude}
-                    onChange={(e) => setLatitude(e.target.value)}
+                    value={lat}
+                    onChange={(e) => setLat(e.target.value)}
                     placeholder="Latitude"
                     required
                     />
@@ -80,8 +80,8 @@ function CreateSpot(){
                     Longitude
                     <input
                     type="text"
-                    value={longitude}
-                    onChange={(e) => setLongitude(e.target.value)}
+                    value={lng}
+                    onChange={(e) => setLng(e.target.value)}
                     placeholder="Longitude"
                     required
                     />
@@ -107,8 +107,8 @@ function CreateSpot(){
                 <label>
                     <input
                     type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     placeholder="Name of your spot"
                     required
                     />
