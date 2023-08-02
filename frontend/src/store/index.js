@@ -4,14 +4,13 @@ import sessionReducer from "./session";
 import spotsReducer from './spots/spotActions';
 import indSpotReducer from './spot/specSpotActions';
 import reviewReducer from './review/reviewActions';
-import spotReducer from './createSpot/createSpotActions';
+
 
 const rootReducer = combineReducers({
   indSpot: indSpotReducer,
   session: sessionReducer,
   spots: spotsReducer,
   review: reviewReducer,
-  createdSpot: spotReducer
 });
 
 let enhancer;

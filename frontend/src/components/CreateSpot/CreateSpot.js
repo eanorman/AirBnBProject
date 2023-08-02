@@ -16,15 +16,32 @@ function CreateSpot(){
     const [description, setDescription] = useState('');
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
-    const [imageUrls, setImageUrls] = useState([])
+    const [imageUrls, setImageUrls] = useState(['', '', '', '', ''])
     const [errors, setErrors] = useState({});
     const dispatch = useDispatch();
 
     const history = useHistory();
     const spot = useSelector((state) => state.indSpot.indSpot);
 
+    const isValidImageUrl = (url) => {
+        const supportedFormats = ['jpg', 'jpeg', 'png']; 
+        const extension = url.split('.').pop().toLowerCase();
+        return supportedFormats.includes(extension);
+    }
+
+
+
     const handleSubmit = (e) => {
+        const areImageUrlsValid = imageUrls.every((url) => {
+            const trimmedUrl = url.trim();
+            return trimmedUrl === '' || isValidImageUrl(trimmedUrl);
+        })
+        
         e.preventDefault();
+        if(!areImageUrlsValid) {
+            setErrors({ imageUrls: 'One or more image URLs are invalid'})
+            return;
+        }
         return dispatch(
             createSpot({
                 country,
@@ -40,15 +57,18 @@ function CreateSpot(){
             })
         )
         .then((res) => {
+            console.log(res)
             history.push(`/spots/${spot.id}`)
             return res;
         })
         .catch((res) => {
-
             const data = res;
 
             if(data && data.errors) {
-                setErrors(data.errors);
+                setErrors({
+                    ...errors,
+                    ...data.errors
+                });
 
             }
         })
@@ -66,7 +86,7 @@ function CreateSpot(){
             <h1>Create a New Spot</h1>
             <h2>Where's your place located?</h2>
             <p>Guests will only get your exact address once they booked a reservation</p>
-            <form onSubmit={handleSubmit}>
+            <form>
                     {errors.country && <p className="error">{errors.country}</p>}
                 <label>
                     Country
@@ -179,12 +199,14 @@ function CreateSpot(){
                 </label>
                 <h2>Liven up your spot with photos</h2>
                 <p>Submit a link to at least one photo to publish your spot.</p>
+                {errors.imageUrls && <p className="error">{errors.imageUrls}</p>}
                 <label>
                     <input
                     type="text"
                     value={imageUrls[0]}
                     onChange={(e) => handleImageUrlChange(0, e.target.value)}
                     placeholder="Preview Image URL"
+                    required
                     />
                 </label>
                 <label>
@@ -219,7 +241,7 @@ function CreateSpot(){
                     placeholder="Image URL"
                     />
                 </label>
-                <button type="submit">Create Spot</button>
+                <button type="submit" onClick={handleSubmit}>Create Spot</button>
             </form>
         </div>
     )
