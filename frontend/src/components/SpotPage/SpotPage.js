@@ -49,7 +49,6 @@ function SpotPage() {
               )
             })}
           </ul>
-        }
           <div className="spot-container">
             <div className="spot-description">
               <h2>Hosted by {spot.indSpot.Owner.firstName} {spot.indSpot.Owner.lastName}</h2>
