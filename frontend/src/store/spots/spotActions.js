@@ -1,4 +1,5 @@
 export const FETCH_SPOTS_SUCCESS = 'FETCH_SPOTS_SUCCESS';
+export const CREATE_SPOT_SUCCESS = 'CREATE_SPOT_SUCCESS'
 
 export const fetchSpots = () => async (dispatch) => {
     const res = await fetch(`/api/spots`);
@@ -17,6 +18,8 @@ const receiveSpots = (spots) => {
         payload: spots
     }
 }
+
+
 
 const initialState = {};
 

@@ -20,7 +20,6 @@ function Reviews({ spot }) {
 
     if (loading) {
         const reviewArray = review.review.Reviews;
-        console.log(spot)
         return (
             <div className='reviews-container'>
                 {spot.numReviews > 0 ? (

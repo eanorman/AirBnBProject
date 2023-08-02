@@ -42,11 +42,11 @@ function SignupFormModal() {
   };
 
   let disabled = false;
-  if(!email 
-    || !username 
-    || !firstName 
-    || !lastName 
-    || !password 
+  if(!email
+    || !username
+    || !firstName
+    || !lastName
+    || !password
     || !confirmPassword
     || username.length < 4
     || password.length < 6
