@@ -2,10 +2,15 @@ import React, { useEffect, useState } from 'react';
 import './Reviews.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchReview } from '../../store/review/reviewActions';
+import ReviewModal from '../ReviewModal/ReviewModal';
+import OpenModalMenuItem from '../Navigation/OpenModalMenuItem';
 
 function Reviews({ spot }) {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
+
+
+
 
     useEffect(() => {
         dispatch(fetchReview(spot.id)).then(() => setLoading(true));
@@ -18,8 +23,17 @@ function Reviews({ spot }) {
     const review = useSelector(reviewSelector);
     const sessionUser = useSelector(state => state.session.user);
 
+
+
     if (loading) {
         const reviewArray = review.review.Reviews;
+        let reviewUsers = [];
+        if (reviewArray.length) {
+            reviewUsers = reviewArray.map((review) => {
+                return review.userId
+            });
+        }
+
         return (
             <div className='reviews-container'>
                 {spot.numReviews > 0 ? (
@@ -31,13 +45,14 @@ function Reviews({ spot }) {
 
                 ) : (
                     <h2>★ New</h2>
-                )
-                }
-                {sessionUser ? (
-                    <button className='post-review-button'>Post Your Review</button>
-                ) : (
-                    <button className='hidden'></button>
                 )}
+
+{sessionUser && sessionUser.id !== spot.ownerId && !reviewUsers.includes(sessionUser.id) && (
+          <OpenModalMenuItem
+            modalComponent={<ReviewModal />}
+            itemText="Post Your Review"
+          />
+        )}
                 {reviewArray.length ? (
                     reviewArray.map(review => {
                         const dateObject = new Date(review.createdAt);
@@ -62,9 +77,11 @@ function Reviews({ spot }) {
                         </div>
                     )
                 )}
+
             </div>
         )
-
+    } else {
+        return null;
     }
 }
 

@@ -1,0 +1,14 @@
+.rating-stars {
+    unicode-bidi: bidi-override;
+    direction: rtl;
+  }
+  .rating-stars > span {
+    display: inline-block;
+    position: relative;
+    width: 1.1em;
+  }
+  .rating-stars > span:hover:before,
+  .rating-stars > span:hover ~ span:before {
+     content: "\2605";
+     position: absolute;
+  }
