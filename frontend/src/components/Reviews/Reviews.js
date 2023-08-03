@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchReview } from '../../store/review/reviewActions';
 import ReviewModal from '../ReviewModal/ReviewModal';
 import OpenModalMenuItem from '../Navigation/OpenModalMenuItem';
+import RemoveReviewModal from '../RemoveReviewModal/RemoveReviewModal';
 
 function Reviews({ spot }) {
     const dispatch = useDispatch();
@@ -14,7 +15,7 @@ function Reviews({ spot }) {
 
     useEffect(() => {
         dispatch(fetchReview(spot.id)).then(() => setLoading(true));
-    }, [dispatch, spot.id])
+    }, [dispatch, spot.id, loading])
 
     const reviewSelector = (state) => {
         return state.review
@@ -23,12 +24,15 @@ function Reviews({ spot }) {
     const review = useSelector(reviewSelector);
     const sessionUser = useSelector(state => state.session.user);
 
+   
+
 
 
     if (loading) {
         const reviewArray = review.review.Reviews;
         let reviewUsers = [];
-        if (reviewArray.length) {
+        if (reviewArray?.length) {
+            reviewArray.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             reviewUsers = reviewArray.map((review) => {
                 return review.userId
             });
@@ -49,11 +53,11 @@ function Reviews({ spot }) {
 
 {sessionUser && sessionUser.id !== spot.ownerId && !reviewUsers.includes(sessionUser.id) && (
           <OpenModalMenuItem
-            modalComponent={<ReviewModal />}
+            modalComponent={<ReviewModal setLoading={setLoading} loading={loading}/>}
             itemText="Post Your Review"
           />
         )}
-                {reviewArray.length ? (
+                {reviewArray?.length ? (
                     reviewArray.map(review => {
                         const dateObject = new Date(review.createdAt);
                         const options = { year: 'numeric', month: 'long' };
@@ -63,6 +67,11 @@ function Reviews({ spot }) {
                                 <h3>{review.User.firstName}</h3>
                                 <p className='date'>{formattedDate}</p>
                                 <p className='review-text'>{review.review}</p>
+                                {review.User.id === sessionUser.id ? (<OpenModalMenuItem
+            modalComponent={<RemoveReviewModal reviewId={review.id} setLoading={setLoading}/>}
+            itemText="Delete"
+          />) : (<p className='hidden'></p>)}
+                                
                             </div>
                         )
                     })
