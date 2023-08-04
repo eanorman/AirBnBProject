@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import './UpdateSpot.css'
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { createSpot, fetchIndSpot, updateSpot } from "../../store/spot/specSpotActions";
+import { fetchIndSpot, updateSpot } from "../../store/spot/specSpotActions";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -89,7 +89,6 @@ function UpdateSpot() {
                 })
             )
             .then((res) => {
-                console.log(res)
                 history.push(`/spots/${res.id}`)
             })
             .catch((res) => {

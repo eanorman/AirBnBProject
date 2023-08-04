@@ -87,12 +87,32 @@ export const updateSpot = (spot) => async (dispatch) => {
         }),
     });
     const data = await response;
+    await deleteImages(data.id);
     const successfulImages = await handleImages(data.id, imageUrls);
     data.SpotImages = successfulImages;
     dispatch(receiveIndSpot(data))
     const updatedIndSpot = await dispatch(fetchIndSpot(data.id));
     return updatedIndSpot;
 
+}
+
+const deleteImages = async (spotId) => {
+    const res = await fetch(`/api/spots/${spotId}`)
+    if(res.ok){
+        const data = await res.json();
+        const spotImages = data.SpotImages
+        const imageIds = spotImages.map(image => image.id)
+        for (let i = 0; i < imageIds.length; i++) {
+            let id = imageIds[i]
+            console.log('in the loop ' + id)
+            const res = await csrfSpotFetch(`/api/spot-images/${id}`, {
+                method: 'DELETE'
+            })
+            await res;
+        }
+    }
+    
+    return;
 }
 
 export const handleImages = async (spotId, images) => {
