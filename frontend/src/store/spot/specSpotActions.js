@@ -1,6 +1,7 @@
 import { csrfSpotFetch } from "../csrfSpot";
 
 export const FETCH_IND_SPOT_SUCCESS = 'FETCH_IND_SPOT_SUCCESS';
+export const CLEAR_IND_SPOT_SUCCESS = 'CLEAR_IND_SPOT_SUCCESS';
 
 export const fetchIndSpot = (spotId) => async (dispatch) => {
     if (spotId !== 'new') {
@@ -14,6 +15,16 @@ export const fetchIndSpot = (spotId) => async (dispatch) => {
         }
     }
 };
+
+export const clearIndSpot = () => async (dispatch) => {
+    dispatch(clearSpot())
+}
+
+const clearSpot = () => {
+    return {
+        type: CLEAR_IND_SPOT_SUCCESS
+    }
+}
 
 const receiveIndSpot = (spot) => {
     return {
@@ -103,15 +114,14 @@ const deleteImages = async (spotId) => {
         const spotImages = data.SpotImages
         const imageIds = spotImages.map(image => image.id)
         for (let i = 0; i < imageIds.length; i++) {
-            let id = imageIds[i]
-            console.log('in the loop ' + id)
+            let id = imageIds[i];
             const res = await csrfSpotFetch(`/api/spot-images/${id}`, {
                 method: 'DELETE'
             })
             await res;
         }
     }
-    
+
     return;
 }
 
@@ -156,6 +166,10 @@ const indSpotReducer = (state = initialState, action) => {
             const newState = { ...state }
             newState.indSpot = action.payload;
             return newState
+        }
+        case CLEAR_IND_SPOT_SUCCESS: {
+            const newState = {}
+            return newState;
         }
         default: {
             return state;

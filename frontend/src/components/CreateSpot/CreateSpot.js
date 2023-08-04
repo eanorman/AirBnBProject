@@ -56,7 +56,6 @@ function CreateSpot(){
             })
         )
         .then((res) => {
-            console.log(res)
             history.push(`/spots/${res.id}`)
         })
         .catch((res) => {

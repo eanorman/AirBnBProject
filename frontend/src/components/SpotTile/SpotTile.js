@@ -20,7 +20,7 @@ function SpotTile({ spot }) {
         {spot.avgRating > 0 ? (
           <p className="rating">★{spot.avgRating}</p>
         ) : (
-          <p>★ New</p>
+          <p className="rating">★ New</p>
         )}
         <p className="price">${spot.price} night</p>
       </div>

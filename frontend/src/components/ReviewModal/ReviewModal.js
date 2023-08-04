@@ -28,7 +28,6 @@ function ReviewModal({setLoading, loading}) {
       dispatch(fetchReview(spot));
       dispatch(fetchIndSpot(spot));
       setLoading(false);
-      console.log(loading)
       return res;
     })
     .catch((res) => {
@@ -75,8 +74,8 @@ function ReviewModal({setLoading, loading}) {
                     onClick={() => setRating(ratingValue)}
 
                   />
-                  <i 
-                    className={`fa fa-star ${setStarColor(ratingValue)}`}                     
+                  <i
+                    className={`fa fa-star ${setStarColor(ratingValue)}`}
                     onMouseEnter={() => setHover(ratingValue)}
                     onMouseLeave={() => setHover(null)} ></i>
                 </label>

@@ -1,55 +1,41 @@
+.spot-page-container {
+   max-width: 1000px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   margin: auto;
+}
+
 .photo-gallery {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-}
-
-.photo-0 {
-    flex-basis: 50%;
-}
-
-.photo-0 img {
-    width: 100%;
-    height: auto;
-}
-
-.photo-1 {
-    flex-basis: 25%;
-    width: 100%;
-    max-height: 225px;
-}
- .photo-1 img {
-    height: auto;
+   display: flex;
+   flex-wrap: wrap;
+   gap: 10px;
  }
 
- .photo-2 {
-    flex-basis: 25%;
-    width: 100%;
-    max-height: 225px;
+ .photo-0 {
+   flex: 1;
+   max-width: 75%;
  }
 
- .photo-2 img {
-    height: auto;
+ .photo-0 img {
+   width: 100%;
+   height: auto;
  }
 
- .photo-3 {
-    flex-basis: 25%;
-    width: 100%;
-    max-height: 225px;
+ .spot-images-grid {
+   flex: 1;
+   display: grid;
+   grid-template-columns: repeat(2, 1fr);
+   gap: 10px;
  }
 
- .photo-3 img {
-    height: auto;
+ .photo-item {
+   max-height: 225px;
  }
 
- .photo-4 {
-    flex-basis: 25%;
-    width: 100%;
-    max-height: 225px;
- }
-
- .photo-4 img {
-    height: auto;
+ .photo-item img {
+   width: 100%;
+   height: auto;
  }
 
  h1 {
@@ -62,16 +48,9 @@
 
  .spot-page {
     max-width: 1000px;
-    margin-left: 50px;
-    margin-right: 50px;
+    margin: auto;
  }
 
- .spot-page-container {
-    max-width: 1000px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
- }
 
  .spot-container {
     margin: 20px;
@@ -81,7 +60,7 @@
  }
 
  .spot-description {
-    width: 60%; 
+    width: 60%;
  }
 .rating p {
     font-size: 12pt;
@@ -95,7 +74,7 @@
 }
 
 .price-rating {
-    display: flex;  
+    display: flex;
     align-items: center;
     justify-content: space-between;
  }
@@ -117,7 +96,7 @@
     background-color: #FFFFFF;
     color: #FF5A5F;
  }
- 
+
  .review-container {
     display: block;
  }

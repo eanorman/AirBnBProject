@@ -13,6 +13,7 @@ function ProfileButton({ user }) {
     const ulRef = useRef();
     const history = useHistory();
 
+
     const openMenu = () => {
         if (showMenu) return;
         setShowMenu(true);
@@ -43,6 +44,7 @@ function ProfileButton({ user }) {
 
     const handleClick = () => {
         history.push('/spots/current')
+        setShowMenu(false);
     }
 
     const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
