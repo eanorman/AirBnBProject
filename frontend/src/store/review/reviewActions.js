@@ -33,11 +33,11 @@ export const deleteReview = (reviewId) => async (dispatch) => {
     const res = await csrfSpotFetch(`/api/reviews/${reviewId}`, {
         method: 'DELETE'
     });
-    
+
       const data = await res
       dispatch(deletedReview(reviewId));
       return data;
- 
+
   };
 
 const receiveReview = (data) => {
@@ -74,12 +74,10 @@ const reviewReducer = (state = initialState, action) => {
         return newState;
       }
       case DELETE_REVIEW_SUCCESS: {
-        // Filter out the deleted review from the Reviews array
         const updatedReviews = state.review?.Reviews.filter(
           (review) => review.id !== action.payload
         );
-  
-        // Create a new state with the updated Reviews array
+
         const newState = {
           ...state,
           review: {
@@ -94,5 +92,5 @@ const reviewReducer = (state = initialState, action) => {
       }
     }
   };
-  
+
   export default reviewReducer;

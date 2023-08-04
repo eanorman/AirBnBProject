@@ -16,6 +16,8 @@ import LandingPage from "./components/LandingPage/LandingPage";
 import SpotPage from "./components/SpotPage/SpotPage";
 import CreateSpot from "./components/CreateSpot/CreateSpot";
 import { Switch } from "react-router-dom/cjs/react-router-dom.min";
+import ManageSpots from "./components/ManageSpots/ManageSpots";
+import UpdateSpot from "./components/UpdateSpot/UpdateSpot";
 
 const store = configureStore();
 
@@ -43,6 +45,12 @@ function Root() {
             </Route>
             <Route path="/spots/new">
               <CreateSpot />
+            </Route>
+            <Route path='/spots/:spotId/edit'>
+                <UpdateSpot />
+            </Route>
+            <Route path='/spots/current'>
+              <ManageSpots />
             </Route>
             <Route path="/spots/:spotId">
               <SpotPage />

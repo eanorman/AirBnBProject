@@ -58,9 +58,46 @@ export const createSpot = (spot) => async (dispatch) => {
 
 }
 
+export const updateSpot = (spot) => async (dispatch) => {
+    const {
+        id,
+        country,
+        address,
+        city,
+        state,
+        lat,
+        lng,
+        description,
+        name,
+        price,
+        imageUrls
+    } = spot;
+    const response = await csrfSpotFetch(`/api/spots/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+            address,
+            city,
+            state,
+            country,
+            lat,
+            lng,
+            name,
+            description,
+            price
+        }),
+    });
+    const data = await response;
+    const successfulImages = await handleImages(data.id, imageUrls);
+    data.SpotImages = successfulImages;
+    dispatch(receiveIndSpot(data))
+    const updatedIndSpot = await dispatch(fetchIndSpot(data.id));
+    return updatedIndSpot;
+
+}
+
 export const handleImages = async (spotId, images) => {
     let successfulImages = [];
-  
+
     for (let i = 0; i < images.length; i++) {
         let url = images[i];
         let preview = false
@@ -73,7 +110,7 @@ export const handleImages = async (spotId, images) => {
                     preview
                 })
             })
-    
+
             const data = await response;
             successfulImages.push(data);
 
@@ -83,8 +120,9 @@ export const handleImages = async (spotId, images) => {
     return successfulImages;
 }
 
+
 const isValidImageUrl = (url) => {
-    const supportedFormats = ['jpg', 'jpeg', 'png']; 
+    const supportedFormats = ['jpg', 'jpeg', 'png'];
     const extension = url.split('.').pop().toLowerCase();
     return supportedFormats.includes(extension);
 }

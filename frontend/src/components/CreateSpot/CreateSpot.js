@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { createSpot } from "../../store/spot/specSpotActions";
 import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
 
 function CreateSpot(){
     const [country, setCountry] = useState('');
@@ -21,10 +20,10 @@ function CreateSpot(){
     const dispatch = useDispatch();
 
     const history = useHistory();
-    const spot = useSelector((state) => state.indSpot.indSpot);
+
 
     const isValidImageUrl = (url) => {
-        const supportedFormats = ['jpg', 'jpeg', 'png']; 
+        const supportedFormats = ['jpg', 'jpeg', 'png'];
         const extension = url.split('.').pop().toLowerCase();
         return supportedFormats.includes(extension);
     }
@@ -36,7 +35,7 @@ function CreateSpot(){
             const trimmedUrl = url.trim();
             return trimmedUrl === '' || isValidImageUrl(trimmedUrl);
         })
-        
+
         e.preventDefault();
         if(!areImageUrlsValid) {
             setErrors({ imageUrls: 'One or more image URLs are invalid'})
@@ -58,8 +57,7 @@ function CreateSpot(){
         )
         .then((res) => {
             console.log(res)
-            history.push(`/spots/${spot.id}`)
-            return res;
+            history.push(`/spots/${res.id}`)
         })
         .catch((res) => {
             const data = res;

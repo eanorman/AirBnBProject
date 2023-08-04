@@ -41,6 +41,10 @@ function ProfileButton({ user }) {
         history.push('/')
     };
 
+    const handleClick = () => {
+        history.push('/spots/current')
+    }
+
     const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
     return (
@@ -55,6 +59,7 @@ function ProfileButton({ user }) {
                         <li>{user.username}</li>
                         <li>Hello, {user.firstName} {user.lastName}</li>
                         <li>{user.email}</li>
+                        <li onClick={handleClick}>Manage Spots</li>
                         <li className="button-container">
                             <button onClick={logout}>Log Out</button>
                         </li>

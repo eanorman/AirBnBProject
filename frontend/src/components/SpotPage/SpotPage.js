@@ -13,14 +13,13 @@ function SpotPage() {
   useEffect(() => {
     let isMounted = true;
     dispatch(fetchIndSpot(spotId)).then(() => {
-      // Check if the component is still mounted before updating the state
       if (isMounted) {
         setIsLoading(true);
       }
     });
     return () => {
-      // This function will run when the component unmounts (user navigates away from the page)
       isMounted = false;
+      setIsLoading(false);
     };
   }, [dispatch, spotId]);
 
@@ -41,7 +40,7 @@ function SpotPage() {
           <h1>{spot.indSpot.name}</h1>
           <h2>{spot.indSpot.city}, {spot.indSpot.state}, {spot.indSpot.country}</h2>
           <ul className="photo-gallery">
-            {spot.indSpot.SpotImages.map((image, index) => {
+            {spot.indSpot.SpotImages?.map((image, index) => {
               return (
                 <i className={`photo-${index}`} key={image.id}>
                   <img src={image.url} key={image.id} alt={`spot ${image.id}`} />
