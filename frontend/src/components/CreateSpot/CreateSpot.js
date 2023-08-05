@@ -212,6 +212,7 @@ function CreateSpot() {
           />
         </label>
         </div>
+        <div className="border"></div>
         <h2>Liven up your spot with photos</h2>
         <p>Submit a link to at least one photo to publish your spot.</p>
         {errors.imageUrls && <p className="error">{errors.imageUrls}</p>}

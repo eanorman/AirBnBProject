@@ -111,7 +111,7 @@ function UpdateSpot() {
           };
 
         return (
-            <div>
+            <div className="create-container">
                 <h1>Update Your Spot</h1>
                 <h2>Where's your place located?</h2>
                 <p>Guests will only get your exact address once they booked a reservation</p>
@@ -138,8 +138,9 @@ function UpdateSpot() {
                         required
                         />
                     </label>
+                    <div className="city-state-container">
                         {errors.city && <p className="error">{errors.city}</p>}
-                    <label>
+                    <label className="city">
                         City
                         <input
                         type="text"
@@ -149,9 +150,9 @@ function UpdateSpot() {
                         required
                         />
                     </label>
-                    <span> , </span>
+                    <span className="comma"> , </span>
                     {errors.state && <p className="error">{errors.state}</p>}
-                    <label>
+                    <label className="state">
                         State
                         <input
                         type="text"
@@ -161,7 +162,10 @@ function UpdateSpot() {
                         required
                         />
                     </label>
+                    </div>
+                    <div className="lat-lng-container">
                     {errors.lat && <p className="error">{errors.lat}</p>}
+                    <div className="lat">
                     <label>
                         Latitude
                         <input
@@ -172,6 +176,8 @@ function UpdateSpot() {
                         required
                         />
                     </label>
+                    </div>
+                    <div className="lng">
                     {errors.lng && <p className="error">{errors.lng}</p>}
                     <label>
                         Longitude
@@ -183,12 +189,16 @@ function UpdateSpot() {
                         required
                         />
                     </label>
+                    </div>
+                    </div>
+                    <div className="border"></div>
                     <h2>Describe your place to guests</h2>
                     <p>Mention the best features of your space, any special
                         amenities like fast wifi or parking, and what you
                         love about the neighborhood.
                     </p>
                     {errors.description && <p className="error">{errors.description}</p>}
+                    <div className="description">
                     <label>
                         Description
                         <textarea
@@ -198,6 +208,8 @@ function UpdateSpot() {
                         required
                         />
                     </label>
+                    </div>
+                    <div className="border"></div>
                     <h2>Create a title for your spot</h2>
                     <p>Catch guests' attention with a spot title that highlights
                         what makes your place special.
@@ -212,13 +224,15 @@ function UpdateSpot() {
                         required
                         />
                     </label>
+                    <div className="border"></div>
                     <h2>Set a base price for your spot</h2>
                     <p>Competitive pricing can help your listing stand out and
                         rank higher in search results.
                     </p>
                     {errors.price && <p className="error">{errors.price}</p>}
+                    <div className="create-price">
                     <label>
-                        <p>$</p>
+                        <span>$</span>
                         <input
                             type='number'
                             value={price}
@@ -226,6 +240,8 @@ function UpdateSpot() {
                             placeholder="Price per night (USD)"
                         />
                     </label>
+                    </div>
+                    <div className="border"></div>
                     <h2>Liven up your spot with photos</h2>
                     <p>Submit a link to at least one photo to publish your spot.</p>
                     {errors.imageUrls && <p className="error">{errors.imageUrls}</p>}
@@ -270,7 +286,11 @@ function UpdateSpot() {
                         placeholder="Image URL"
                         />
                     </label>
-                    <button type="submit" onClick={handleSubmit}>Create Spot</button>
+                    <div className="button">
+        <button type="submit" onClick={handleSubmit}>
+          Create Spot
+        </button>
+        </div>
                 </form>
             </div>
         )

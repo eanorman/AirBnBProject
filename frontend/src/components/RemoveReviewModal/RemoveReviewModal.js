@@ -3,6 +3,7 @@ import { deleteReview, fetchReview } from "../../store/review/reviewActions";
 import { useModal } from "../../context/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchIndSpot } from "../../store/spot/specSpotActions";
+import './RemoveReviewModal.css';
 
 function RemoveReviewModal({ reviewId, setLoading }) {
     const dispatch = useDispatch()
@@ -25,11 +26,11 @@ function RemoveReviewModal({ reviewId, setLoading }) {
          })
       };
     return (
-        <div>
+        <div className="remove-review-container">
             <h2>Confirm Delete</h2>
             <p>Are you sure you want to delete this review?</p>
-            <button onClick={handleSubmit}>Yes (Delete Review)</button>
-            <button onClick={closeModal}>No (Keep Review)</button>
+            <button className='confirm' onClick={handleSubmit}>Yes (Delete Review)</button>
+            <button className='deny' onClick={closeModal}>No (Keep Review)</button>
         </div>
     )
 };
