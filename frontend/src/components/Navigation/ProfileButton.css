@@ -47,6 +47,10 @@ button {
     align-items: center;
 }
 
+.button-container button:hover {
+    background-color: #FF5A5F;
+}
+
 .profile-dropdown button {
     margin-top: 5px;
     margin-bottom: 5px;
