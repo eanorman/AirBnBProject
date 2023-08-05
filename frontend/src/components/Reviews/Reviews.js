@@ -52,10 +52,12 @@ function Reviews({ spot }) {
                 )}
 
 {sessionUser && sessionUser.id !== spot.ownerId && !reviewUsers.includes(sessionUser.id) && (
+    <div className='post-review'>
           <OpenModalMenuItem
             modalComponent={<ReviewModal setLoading={setLoading} loading={loading}/>}
             itemText="Post Your Review"
           />
+          </div>
         )}
                 {reviewArray?.length ? (
                     reviewArray.map(review => {

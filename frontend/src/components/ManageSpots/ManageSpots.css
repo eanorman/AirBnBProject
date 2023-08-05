@@ -1,0 +1,49 @@
+.create-button {
+    background-color: #999999;
+    color: #FFFFFF;
+    box-shadow: 3px 3px 0px 2px rgba(0,0,0,1);
+    width: 200px;
+    margin: 15px;
+    cursor: pointer;
+}
+
+.create-button:hover {
+    background-color: #FF5A5F;
+}
+
+.manage-spots {
+    margin: 0 150px;
+}
+
+.update-button {
+    background-color: #999999;
+    color: #FFFFFF;
+    box-shadow: 3px 3px 0px 2px rgba(0,0,0,1);
+    width: 80px;
+    margin: 15px;
+    cursor: pointer;
+}
+
+.delete-button {
+    background-color: #999999;
+    color: #FFFFFF;
+    box-shadow: 3px 3px 0px 2px rgba(0,0,0,1);
+    border: 2px solid #4b4a4a;
+    width: 80px;
+    margin: 15px;
+    text-align: center;
+    cursor: pointer;
+    list-style-type: none;
+}
+
+.update-button:hover,
+.delete-button:hover {
+background-color: #FF5A5F;
+}
+
+.spacer {
+    margin: 0 50px;
+    display: flex;
+
+    align-items: center;
+}

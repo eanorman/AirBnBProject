@@ -50,7 +50,7 @@ function ReviewModal({setLoading, loading}) {
   };
 
   return (
-    <div className='review-container'>
+    <div className='create-review-container'>
       <h1>How was your stay?</h1>
       {errors.message && <p>{errors.message}</p>}
       <form>
@@ -81,8 +81,8 @@ function ReviewModal({setLoading, loading}) {
                 </label>
               );
             })}
+          <span>Stars</span>
           </div>
-          Stars
         </label>
       </form>
       <button type='submit' onClick={handleSubmit} disabled={disabled}>

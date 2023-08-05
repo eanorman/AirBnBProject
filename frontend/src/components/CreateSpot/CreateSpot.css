@@ -1,0 +1,103 @@
+.create-container {
+    display: block;
+    width: 800px;
+    margin: auto;
+
+}
+
+.create-container input, label {
+    display: block;
+}
+
+.create-container input {
+    width: 75%;
+    margin: 15px 0;
+}
+
+.create-container textarea {
+    width: 75%;
+    height: 200px;
+}
+
+.city-state-container {
+    display: flex;
+    align-items: center;
+
+}
+
+.city,
+.state {
+    width: 100%;
+    display: block;
+}
+
+.city {
+    width: 43%
+}
+
+.state {
+    width: 40%;
+}
+
+
+
+.city-state-container span {
+    font-weight: bold;
+    margin: 5px;
+    align-self:end;
+}
+
+.border {
+    border-bottom: 2px solid black;
+    margin: 40px auto;
+}
+
+.lat-lng-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.lat,
+.lng {
+    width: 43%;
+}
+
+.create-container p {
+    margin: 0 0 20px 0;
+}
+
+.create-price {
+    display: block;
+}
+
+.create-price span {
+    float: left;
+    margin-right: 5px;
+}
+
+.description {
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+}
+
+.description textarea {
+    width: 695px;
+    margin: 15px 0;
+}
+
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 70px;
+}
+
+.button button {
+    width: 25%;
+    background-color: #FF5A5F;
+    color: #FFFFFF;
+    box-shadow: 2px 2px 0px 1px rgba(0,0,0,1);
+}
