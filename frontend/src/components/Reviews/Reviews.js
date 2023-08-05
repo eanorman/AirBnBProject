@@ -24,7 +24,7 @@ function Reviews({ spot }) {
     const review = useSelector(reviewSelector);
     const sessionUser = useSelector(state => state.session.user);
 
-   
+
 
 
 
@@ -67,17 +67,17 @@ function Reviews({ spot }) {
                                 <h3>{review.User.firstName}</h3>
                                 <p className='date'>{formattedDate}</p>
                                 <p className='review-text'>{review.review}</p>
-                                {review.User.id === sessionUser.id ? (<OpenModalMenuItem
+                                {review.User?.id === sessionUser?.id ? (<OpenModalMenuItem
             modalComponent={<RemoveReviewModal reviewId={review.id} setLoading={setLoading}/>}
             itemText="Delete"
           />) : (<p className='hidden'></p>)}
-                                
+
                             </div>
                         )
                     })
 
                 ) : (
-                    spot.Owner.id !== sessionUser.id ? (
+                    spot.Owner.id !== sessionUser?.id ? (
                         <div>
                             <p>Be the first to post a review!</p>
                         </div>
