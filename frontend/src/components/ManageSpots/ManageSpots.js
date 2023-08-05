@@ -6,6 +6,7 @@ import SpotTile from "../SpotTile/SpotTile";
 import { useHistory } from "react-router-dom";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import RemoveSpotModal from "../RemoveSpotModal/RemoveSpotModal";
+import { clearCurrentSpots } from "../../store/spots/spotActions";
 
 function ManageSpots() {
     const dispatch = useDispatch();
@@ -18,6 +19,10 @@ function ManageSpots() {
 
     useEffect(() => {
         dispatch(fetchCurrentSpots())
+
+        return () => {
+            dispatch(clearCurrentSpots())
+        }
     }, [dispatch])
 
     const handleClick = () =>{

@@ -3,7 +3,8 @@ import { csrfSpotFetch } from "../csrfSpot";
 export const FETCH_SPOTS_SUCCESS = 'FETCH_SPOTS_SUCCESS';
 export const CREATE_SPOT_SUCCESS = 'CREATE_SPOT_SUCCESS';
 export const FETCH_CURRENT_SPOTS = 'FETCH CURRENT_SPOTS';
-export const DELETE_SPOT_SUCCESS = 'DELETE_SPOT_SUCCESS'
+export const DELETE_SPOT_SUCCESS = 'DELETE_SPOT_SUCCESS';
+export const CLEAR_SPOT_SUCCESS = 'CLEAR_SPOT_SUCCESS';
 
 export const fetchSpots = () => async (dispatch) => {
     const res = await fetch(`/api/spots`);
@@ -16,6 +17,16 @@ export const fetchSpots = () => async (dispatch) => {
     }
 }
 
+export const clearCurrentSpots = () => async(dispatch) => {
+    dispatch(clearSpots());
+    return;
+}
+
+const clearSpots = () => {
+    return {
+        type: CLEAR_SPOT_SUCCESS
+    }
+}
 const receiveSpots = (spots) => {
     return {
         type: FETCH_SPOTS_SUCCESS,
@@ -70,6 +81,10 @@ const spotsReducer = (state = initialState, action) => {
         }
         case DELETE_SPOT_SUCCESS: {
             const newState = {...state};
+            return newState;
+        }
+        case CLEAR_SPOT_SUCCESS: {
+            const newState = {}
             return newState;
         }
         default:
