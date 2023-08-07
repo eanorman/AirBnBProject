@@ -6,6 +6,7 @@ import SpotTile from "../SpotTile/SpotTile";
 import { useHistory } from "react-router-dom";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import RemoveSpotModal from "../RemoveSpotModal/RemoveSpotModal";
+import { clearCurrentSpots } from "../../store/spots/spotActions";
 
 function ManageSpots() {
     const dispatch = useDispatch();
@@ -18,6 +19,10 @@ function ManageSpots() {
 
     useEffect(() => {
         dispatch(fetchCurrentSpots())
+
+        return () => {
+            dispatch(clearCurrentSpots())
+        }
     }, [dispatch])
 
     const handleClick = () =>{
@@ -30,16 +35,20 @@ function ManageSpots() {
 
 
     return (
-        <div>
+        <div className="manage-spots">
             <h2>Manage Your Spots</h2>
-            <button onClick={handleClick}>Create a New Spot</button>
+            <button onClick={handleClick} className="create-button">Create a New Spot</button>
             <div className='spot-tile-list'>
         {spots?.map(( spot ) => {
             return (
                 <div className="spot-tile" key={spot.id}>
             <SpotTile spot={spot} key={spot.id}/>
-            <button onClick={() => handleEdit(spot.id)}>Update</button>
-            <OpenModalMenuItem modalComponent={<RemoveSpotModal spotId={spot.id} itemText="Delete"/>} />
+            <div className="spacer">
+            <button onClick={() => handleEdit(spot.id)} className="update-button">Update</button>
+            <div className="delete-button">
+            <OpenModalMenuItem className="delete-button" itemText="Delete" modalComponent={<RemoveSpotModal spotId={spot.id} />} />
+           </div>
+           </div>
             </div>
             )
         })}

@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import ProfileButton from "./ProfileButton";
 import "./Navigation.css";
-import logo from "../../Airbnb_logo.png";
+import logo from "../../catbnb.png";
 import NewSpot from "../NewSpot/NewSpot";
 
 function Navigation({ isLoaded }) {

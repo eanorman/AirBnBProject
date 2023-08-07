@@ -28,7 +28,6 @@ function ReviewModal({setLoading, loading}) {
       dispatch(fetchReview(spot));
       dispatch(fetchIndSpot(spot));
       setLoading(false);
-      console.log(loading)
       return res;
     })
     .catch((res) => {
@@ -51,7 +50,7 @@ function ReviewModal({setLoading, loading}) {
   };
 
   return (
-    <div className='review-container'>
+    <div className='create-review-container'>
       <h1>How was your stay?</h1>
       {errors.message && <p>{errors.message}</p>}
       <form>
@@ -75,15 +74,15 @@ function ReviewModal({setLoading, loading}) {
                     onClick={() => setRating(ratingValue)}
 
                   />
-                  <i 
-                    className={`fa fa-star ${setStarColor(ratingValue)}`}                     
+                  <i
+                    className={`fa fa-star ${setStarColor(ratingValue)}`}
                     onMouseEnter={() => setHover(ratingValue)}
                     onMouseLeave={() => setHover(null)} ></i>
                 </label>
               );
             })}
+          <span>Stars</span>
           </div>
-          Stars
         </label>
       </form>
       <button type='submit' onClick={handleSubmit} disabled={disabled}>

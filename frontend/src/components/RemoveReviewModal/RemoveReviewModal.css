@@ -1,0 +1,23 @@
+.remove-review-container {
+    width: 600px;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    align-items: center;
+    margin: auto;
+}
+
+.remove-review-container button {
+    width: 75%;
+    margin: 10px 0;
+    height: 20%;
+}
+
+.remove-review-container p {
+    margin-bottom: 20px;
+}
+
+.remove-review-container h2 {
+    margin-top:20px;
+}

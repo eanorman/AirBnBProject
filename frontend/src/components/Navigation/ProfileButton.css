@@ -33,6 +33,7 @@ button {
     right: 20px;
     text-align: left;
     box-shadow: 2px 2px 5px 1px #000;
+    width: 11%
 
 }
 
@@ -44,6 +45,10 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.button-container button:hover {
+    background-color: #FF5A5F;
 }
 
 .profile-dropdown button {
@@ -60,4 +65,12 @@ button {
 
 .hidden {
     display: none;
+}
+
+.menu-border {
+    border: 1px solid #999999;
+}
+
+.manage-spots {
+    cursor: pointer;
 }

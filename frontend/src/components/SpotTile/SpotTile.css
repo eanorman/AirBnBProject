@@ -1,7 +1,7 @@
 .spot-tile {
-    flex: 0 0 24%;
+    flex: 0 0 22%;
     cursor: pointer;
-    margin: 15px;
+    margin: 5px;
 
 }
 
