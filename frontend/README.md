@@ -13,9 +13,6 @@ This is a clone of the popular online marketplace that connects people renting o
 6. Once in the project directory, change directory to the folder labeled 'frontend'
 7. Type 'npm start' and enjoy! 
 
-## Technical implementation details
-I really had to think about how to implement the edit a spot function. The edit a spot page autofills all of the current spot information, so I needed to pull the current spot information from the backend API. I also needed to be able to update the spot pictures when editing the spot. The application will automatically delete all previously posted pictures and save the current pictures that the user has entered.
-
 ## Screenshots
 
 ### Landing Page
@@ -38,6 +35,9 @@ I really had to think about how to implement the edit a spot function. The edit 
 
 ### Create Review Modal
 ![Create Review Modal](https://github.com/eanorman/AirBnBProject/blob/main/frontend/public/catbnb/review-modal.png?raw=true)
+
+## Technical implementation details
+I really had to think about how to implement the edit a spot function. The edit a spot page autofills all of the current spot information, so I needed to pull the current spot information from the backend API. I also needed to be able to update the spot pictures when editing the spot. The application will automatically delete all previously posted pictures and save the current pictures that the user has entered.
 
 
 ## To do
